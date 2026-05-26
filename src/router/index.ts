@@ -10,6 +10,12 @@ const routes: RouteRecordRaw[] = [
     meta: { public: true, title: '登录' }
   },
   {
+    path: '/portal',
+    name: 'Portal',
+    component: () => import('@/views/PortalView.vue'),
+    meta: { public: true, title: '个人主页' }
+  },
+  {
     path: '/',
     name: 'Home',
     component: () => import('@/views/HomeView.vue'),
@@ -87,9 +93,9 @@ router.beforeEach((to) => {
     return true
   }
 
-  // 未登录跳登录页
+  // 未登录用户访问首页重定向到门户页，其余后台路由跳登录页
   if (!userStore.isLoggedIn) {
-    return '/login'
+    return to.path === '/' ? '/portal' : '/login'
   }
 
   // 检查菜单权限

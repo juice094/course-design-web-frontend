@@ -1,5 +1,5 @@
 <template>
-  <AppLayout v-if="!isLoginPage" />
+  <AppLayout v-if="!isStandalonePage" />
   <RouterView v-else />
 </template>
 
@@ -9,5 +9,6 @@ import { useRoute } from 'vue-router'
 import AppLayout from '@/components/AppLayout.vue'
 
 const route = useRoute()
-const isLoginPage = computed(() => route.path === '/login')
+const standalonePages = ['/login', '/portal']
+const isStandalonePage = computed(() => standalonePages.includes(route.path))
 </script>

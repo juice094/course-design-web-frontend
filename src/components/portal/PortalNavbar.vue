@@ -1,0 +1,162 @@
+<template>
+  <nav class="portal-nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="brand-name">GSAU</span>
+        <span class="brand-divider">·</span>
+        <span class="brand-desc">教务数据可视化系统</span>
+      </div>
+
+      <div class="actions">
+        <button class="theme-btn" @click="themeStore.toggleTheme" aria-label="切换主题">
+          <svg v-if="themeStore.isDark" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg v-else class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+
+        <router-link to="/login" class="enter-btn">进入系统</router-link>
+      </div>
+    </div>
+  </nav>
+</template>
+
+<script setup lang="ts">
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
+</script>
+
+<style scoped>
+.portal-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 1s, border-color 1s;
+}
+
+.dark .portal-nav {
+  background: rgba(15, 23, 42, 0.4);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+  .nav-inner { padding: 0 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .nav-inner { padding: 0 2.5rem; }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.brand-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.05em;
+  transition: color 1s;
+}
+
+.dark .brand-name { color: #fff; }
+
+@media (min-width: 768px) {
+  .brand-name { font-size: 1.25rem; }
+}
+
+.brand-divider {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.brand-desc {
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: 'Noto Serif SC', serif;
+  display: none;
+  transition: color 1s;
+}
+
+.dark .brand-desc { color: #cbd5e1; }
+
+@media (min-width: 640px) {
+  .brand-desc { display: inline; }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dark .theme-btn {
+  background: rgba(51, 65, 85, 0.5);
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-btn:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+.dark .theme-btn:hover { background: #4f46e5; }
+
+.icon { width: 1rem; height: 1rem; }
+
+.enter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+}
+
+.enter-btn:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+}
+</style>

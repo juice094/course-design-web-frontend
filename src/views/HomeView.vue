@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="home-view">
     <el-row :gutter="16" class="data-row">
       <el-col :xs="24" :sm="12" :md="6" v-for="card in summaryCards" :key="card.label">
@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { UserFilled, Male, Female, School, Reading, TrendCharts } from '@element-plus/icons-vue'
-import { DataCard, ChartPanel } from '@student-era/vue-utils'
+import { DataCard, ChartPanel } from '@/vendor/vue-utils'
 import { useStudentStore } from '@/stores/student'
 import { useCourseStore } from '@/stores/course'
 import { useScoreStore } from '@/stores/score'

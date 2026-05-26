@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
+﻿import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Course } from '@/types/course'
-import { persist, restore } from '@student-era/vue-utils'
+import { persist, restore } from '@/vendor/vue-utils'
 
 const PERSIST_KEY = 'courses'
 

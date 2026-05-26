@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="student-view">
     <el-card shadow="never" class="table-card">
       <template #header>
@@ -68,10 +68,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, h } from 'vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
-import { ChartPanel } from '@student-era/vue-utils'
+import { ChartPanel } from '@/vendor/vue-utils'
 import StudentFormDialog from '@/components/StudentFormDialog.vue'
 import { useStudentStore } from '@/stores/student'
-import { exportToExcel, readExcelFile } from '@student-era/vue-utils'
+import { exportToExcel, readExcelFile } from '@/vendor/vue-utils'
 import type { Student } from '@/types'
 
 const studentStore = useStudentStore()

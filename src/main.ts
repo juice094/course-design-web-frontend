@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-import '@student-era/echarts-config'
+import '@/vendor/echarts-config'
 
 import App from './App.vue'
 import router from './router'

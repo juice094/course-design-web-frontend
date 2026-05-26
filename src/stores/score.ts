@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
+﻿import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Score, ScoreWeight } from '@/types/score'
 import { DEFAULT_WEIGHT } from '@/types/score'
-import { persist, restore } from '@student-era/vue-utils'
+import { persist, restore } from '@/vendor/vue-utils'
 
 const PERSIST_KEY = 'scores'
 

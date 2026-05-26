@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="score-view">
     <!-- 统计卡片 -->
     <el-row :gutter="16" class="stat-row">
@@ -100,11 +100,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ChartPanel } from '@student-era/vue-utils'
+import { ChartPanel } from '@/vendor/vue-utils'
 import { useScoreStore } from '@/stores/score'
 import { useStudentStore } from '@/stores/student'
 import { useCourseStore } from '@/stores/course'
-import { exportToExcel } from '@student-era/vue-utils'
+import { exportToExcel } from '@/vendor/vue-utils'
 import type { Score } from '@/types/score'
 
 const scoreStore = useScoreStore()

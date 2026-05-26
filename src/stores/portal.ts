@@ -39,6 +39,8 @@ export interface PortalConfig {
   customCards: CustomCard[]
 }
 
+const DEFAULT_IMAGE_URL = 'https://shared.steamstatic.com/community_assets/images/items/615530/e3f9ec8b350bdceda3aa4d617eb78c404c915129.jpg'
+
 const defaultConfig: PortalConfig = {
   background: {
     type: 'image',
@@ -47,7 +49,7 @@ const defaultConfig: PortalConfig = {
     gradientDirection: '-45deg',
     gradientAnimated: true,
     solidColor: '#f0f4f8',
-    imageUrl: 'https://shared.steamstatic.com/community_assets/images/items/615530/e3f9ec8b350bdceda3aa4d617eb78c404c915129.jpg',
+    imageUrl: DEFAULT_IMAGE_URL,
   },
   sections: [
     { id: 'profileCard', name: '个人名片', enabled: true, order: 0 },
@@ -68,9 +70,13 @@ function loadConfig(): PortalConfig {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as PortalConfig
-      // 合并默认值，处理版本升级时新增字段
+      const mergedBg = { ...defaultConfig.background, ...parsed.background }
+      // 图片模式下若 URL 为空或空白，回退到默认图，避免显示空白背景
+      if (mergedBg.type === 'image' && !mergedBg.imageUrl?.trim()) {
+        mergedBg.imageUrl = DEFAULT_IMAGE_URL
+      }
       return {
-        background: { ...defaultConfig.background, ...parsed.background },
+        background: mergedBg,
         sections: parsed.sections ?? defaultConfig.sections,
         customCards: parsed.customCards ?? defaultConfig.customCards,
       }
@@ -119,8 +125,10 @@ export const usePortalStore = defineStore('portal', () => {
         }
       case 'solid':
         return { background: bg.solidColor }
-      case 'image':
-        return { backgroundImage: `url(${bg.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+      case 'image': {
+        const url = bg.imageUrl?.trim() || DEFAULT_IMAGE_URL
+        return { backgroundImage: `url(${url})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+      }
       default:
         return {}
     }

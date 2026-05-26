@@ -3,7 +3,7 @@
     <div class="profile-header">
       <div class="avatar-wrap">
         <img
-          src="https://api.dicebear.com/7.x/avataaars/svg?seed=gsau-dev"
+          :src="socialLinks.github.avatar"
           alt="avatar"
           class="avatar"
         >
@@ -45,7 +45,7 @@
       <div class="stats">
         <div class="stat">
           <div class="stat-num indigo">
-            12
+            {{ socialLinks.github.repos }}
           </div>
           <div class="stat-label">
             项目
@@ -63,7 +63,7 @@
         <div class="stat-divider" />
         <div class="stat">
           <div class="stat-num pink">
-            128
+            {{ socialLinks.steam.games }}
           </div>
           <div class="stat-label">
             游戏
@@ -74,11 +74,11 @@
       <div class="socials">
         <SocialButton
           type="github"
-          url="https://github.com"
+          :url="socialLinks.github.url"
         />
         <SocialButton
           type="steam"
-          url="https://steamcommunity.com"
+          :url="socialLinks.steam.url"
         />
         <SocialButton
           type="email"
@@ -95,9 +95,10 @@
 
 <script setup lang="ts">
 import SocialButton from './SocialButton.vue'
+import { socialLinks } from '@/data/profile'
 
-function copyEmail() { navigator.clipboard.writeText('dev@gsau.edu.cn') }
-function copyQQ() { navigator.clipboard.writeText('1124533793') }
+function copyEmail() { navigator.clipboard.writeText(socialLinks.email) }
+function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 </script>
 
 <style scoped>

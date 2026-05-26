@@ -55,50 +55,7 @@
 </template>
 
 <script setup lang="ts">
-const projects = [
-  {
-    name: '教务数据可视化系统',
-    description: '基于 Vue 3 + Vite + Element Plus 的现代化教务管理平台，支持成绩分析、选课排课、数据大屏等功能。',
-    url: 'https://github.com',
-    cover: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop',
-    tags: ['Vue 3', 'TypeScript', 'ECharts'],
-  },
-  {
-    name: '个人博客系统 XHBlogs',
-    description: 'Next.js 构建的毛玻璃风格博客，支持 Markdown 写作、AI 助理、网易云音乐挂件。',
-    url: 'https://github.com',
-    cover: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&auto=format&fit=crop',
-    tags: ['Next.js', 'Tailwind', 'Glassmorphism'],
-  },
-  {
-    name: 'GROMACS 模拟可视化',
-    description: '分子动力学模拟数据的前端可视化工具，支持轨迹回放、能量曲线、径向分布函数。',
-    url: 'https://github.com',
-    cover: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop',
-    tags: ['Three.js', 'WebGL', 'Python'],
-  },
-  {
-    name: 'Steam 游戏时长追踪',
-    description: '基于 Steam Web API 的游戏数据统计面板，自动同步库数据并生成可视化报告。',
-    url: 'https://github.com',
-    cover: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop',
-    tags: ['Node.js', 'Vue 3', 'Chart.js'],
-  },
-  {
-    name: '校园二手交易平台',
-    description: '为高校学生打造的闲置物品交易平台，支持商品发布、即时聊天、信用评价。',
-    url: 'https://github.com',
-    cover: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop',
-    tags: ['React', 'Express', 'MongoDB'],
-  },
-  {
-    name: '算法可视化实验室',
-    description: '交互式算法教学平台，支持排序、图论、动态规划等算法的逐步可视化演示。',
-    url: 'https://github.com',
-    cover: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=600&auto=format&fit=crop',
-    tags: ['Vue 3', 'Canvas', 'D3.js'],
-  },
-]
+import { projects } from '@/data/profile'
 </script>
 
 <style scoped>

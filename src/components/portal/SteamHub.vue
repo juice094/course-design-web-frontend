@@ -58,7 +58,7 @@
         <div class="stats-grid">
           <div class="stat-box">
             <div class="stat-num pink">
-              128
+              {{ steamStats.totalGames }}
             </div>
             <div class="stat-label">
               游戏总数
@@ -66,15 +66,7 @@
           </div>
           <div class="stat-box">
             <div class="stat-num pink">
-              2,847
-            </div>
-            <div class="stat-label">
-              总时长(h)
-            </div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num pink">
-              42
+              {{ steamStats.perfectGames }}
             </div>
             <div class="stat-label">
               完美通关
@@ -82,19 +74,27 @@
           </div>
           <div class="stat-box">
             <div class="stat-num pink">
-              3,156
+              {{ steamStats.totalAchievements.toLocaleString() }}
             </div>
             <div class="stat-label">
               成就数
             </div>
           </div>
+          <div class="stat-box">
+            <div class="stat-num pink">
+              {{ steamStats.avgCompletion }}%
+            </div>
+            <div class="stat-label">
+              平均完成度
+            </div>
+          </div>
         </div>
         <div class="game-tags">
-          <span class="g-tag">Arknights</span>
-          <span class="g-tag">CS2</span>
-          <span class="g-tag">Elden Ring</span>
-          <span class="g-tag">Hollow Knight</span>
-          <span class="g-tag">Stardew Valley</span>
+          <span
+            v-for="tag in gameTags"
+            :key="tag"
+            class="g-tag"
+          >{{ tag }}</span>
         </div>
       </div>
     </div>
@@ -102,26 +102,7 @@
 </template>
 
 <script setup lang="ts">
-const recentGames = [
-  {
-    name: 'Arknights',
-    hours: '1,247',
-    progress: 85,
-    cover: 'https://images.unsplash.com/photo-1614726365723-49cfae9278b7?w=200&auto=format&fit=crop',
-  },
-  {
-    name: 'Counter-Strike 2',
-    hours: '623',
-    progress: 62,
-    cover: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop',
-  },
-  {
-    name: 'Elden Ring',
-    hours: '412',
-    progress: 78,
-    cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=200&auto=format&fit=crop',
-  },
-]
+import { recentGames, steamStats, gameTags } from '@/data/profile'
 </script>
 
 <style scoped>

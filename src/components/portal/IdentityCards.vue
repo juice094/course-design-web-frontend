@@ -66,22 +66,22 @@
       </div>
       <div class="id-body">
         <div class="id-row">
-          <span class="id-key">GitHub</span><span class="id-val">@gsau-dev</span>
+          <span class="id-key">GitHub</span><span class="id-val">@juice094</span>
         </div>
         <div class="id-row">
-          <span class="id-key">贡献</span><span class="id-val">1,247 commits</span>
+          <span class="id-key">仓库</span><span class="id-val">{{ socialLinks.github.repos }} 个公开</span>
         </div>
         <div class="id-row">
-          <span class="id-key">星标</span><span class="id-val highlight">342 ⭐</span>
+          <span class="id-key">Followers</span><span class="id-val highlight">{{ socialLinks.github.followers }}</span>
         </div>
         <div class="id-row">
-          <span class="id-key">语言</span><span class="id-val">TypeScript · Vue</span>
+          <span class="id-key">主力语言</span><span class="id-val">Rust · TypeScript</span>
         </div>
       </div>
       <div class="id-tags">
+        <span class="tag dev-tag">Rust</span>
         <span class="tag dev-tag">Vue 3</span>
-        <span class="tag dev-tag">Node.js</span>
-        <span class="tag dev-tag">Tailwind</span>
+        <span class="tag dev-tag">Python</span>
       </div>
     </div>
 
@@ -103,16 +103,16 @@
       </div>
       <div class="id-body">
         <div class="id-row">
-          <span class="id-key">ID</span><span class="id-val">xinghuisama</span>
+          <span class="id-key">昵称</span><span class="id-val">{{ socialLinks.steam.nickname }}</span>
         </div>
         <div class="id-row">
-          <span class="id-key">等级</span><span class="id-val">Lv. 42</span>
+          <span class="id-key">等级</span><span class="id-val">Lv. {{ socialLinks.steam.level }}</span>
         </div>
         <div class="id-row">
-          <span class="id-key">时长</span><span class="id-val highlight">2,847 h</span>
+          <span class="id-key">游戏库</span><span class="id-val highlight">{{ socialLinks.steam.games }} 款</span>
         </div>
         <div class="id-row">
-          <span class="id-key">最近在玩</span><span class="id-val">Arknights · CS2</span>
+          <span class="id-key">近两周</span><span class="id-val">{{ socialLinks.steam.recentHours }} 小时</span>
         </div>
       </div>
       <div class="id-tags">
@@ -123,6 +123,10 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { socialLinks } from '@/data/profile'
+</script>
 
 <style scoped>
 .id-grid {

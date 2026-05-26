@@ -41,13 +41,13 @@ export interface PortalConfig {
 
 const defaultConfig: PortalConfig = {
   background: {
-    type: 'gradient',
+    type: 'image',
     gradientFrom: '#a18cd1',
     gradientTo: '#fbc2eb',
     gradientDirection: '-45deg',
     gradientAnimated: true,
     solidColor: '#f0f4f8',
-    imageUrl: '',
+    imageUrl: 'https://shared.steamstatic.com/community_assets/images/items/615530/e3f9ec8b350bdceda3aa4d617eb78c404c915129.jpg',
   },
   sections: [
     { id: 'profileCard', name: '个人名片', enabled: true, order: 0 },

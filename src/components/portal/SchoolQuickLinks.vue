@@ -1,18 +1,50 @@
 <template>
   <div class="ql-section">
     <div class="ql-grid">
-      <router-link v-for="link in links" :key="link.name" :to="link.path" class="ql-card">
-        <div class="ql-icon" :class="link.color">
-          <svg class="ql-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" :d="link.icon" />
+      <router-link
+        v-for="link in links"
+        :key="link.name"
+        :to="link.path"
+        class="ql-card"
+      >
+        <div
+          class="ql-icon"
+          :class="link.color"
+        >
+          <svg
+            class="ql-svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              :d="link.icon"
+            />
           </svg>
         </div>
         <div class="ql-info">
-          <h4 class="ql-name">{{ link.name }}</h4>
-          <p class="ql-desc">{{ link.desc }}</p>
+          <h4 class="ql-name">
+            {{ link.name }}
+          </h4>
+          <p class="ql-desc">
+            {{ link.desc }}
+          </p>
         </div>
-        <svg class="ql-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        <svg
+          class="ql-arrow"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </router-link>
     </div>

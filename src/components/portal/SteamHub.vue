@@ -2,25 +2,48 @@
   <div class="section">
     <div class="section-header">
       <div class="section-icon pink-bg">
-        <svg class="icon-svg pink" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M11.979 0C5.346 0 0 5.346 0 11.979c0 2.789.96 5.623 2.674 7.962L.81 22.96l3.519-.998c1.74 1.145 3.81 1.813 5.963 1.813 6.633 0 11.979-5.346 11.979-11.979C22.271 5.346 16.925 0 11.979 0zM6.69 14.323l3.887 1.592c1.254-.674 2.236-1.788 2.74-3.147l-4.47-1.829a4.002 4.002 0 01-2.157 3.384zm7.082-4.516a4 4 0 113.228 3.228 4 4 0 01-3.228-3.228z"/>
+        <svg
+          class="icon-svg pink"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M11.979 0C5.346 0 0 5.346 0 11.979c0 2.789.96 5.623 2.674 7.962L.81 22.96l3.519-.998c1.74 1.145 3.81 1.813 5.963 1.813 6.633 0 11.979-5.346 11.979-11.979C22.271 5.346 16.925 0 11.979 0zM6.69 14.323l3.887 1.592c1.254-.674 2.236-1.788 2.74-3.147l-4.47-1.829a4.002 4.002 0 01-2.157 3.384zm7.082-4.516a4 4 0 113.228 3.228 4 4 0 01-3.228-3.228z" />
         </svg>
       </div>
-      <h2 class="section-title">游戏时光</h2>
+      <h2 class="section-title">
+        游戏时光
+      </h2>
     </div>
 
     <div class="steam-grid">
       <!-- 最近在玩 -->
       <div class="steam-card">
-        <h3 class="card-subtitle">最近在玩</h3>
+        <h3 class="card-subtitle">
+          最近在玩
+        </h3>
         <div class="game-list">
-          <div v-for="game in recentGames" :key="game.name" class="game-item">
-            <img :src="game.cover" :alt="game.name" class="game-cover" />
+          <div
+            v-for="game in recentGames"
+            :key="game.name"
+            class="game-item"
+          >
+            <img
+              :src="game.cover"
+              :alt="game.name"
+              class="game-cover"
+            >
             <div class="game-info">
-              <h4 class="game-name">{{ game.name }}</h4>
-              <p class="game-hours">{{ game.hours }} 小时</p>
+              <h4 class="game-name">
+                {{ game.name }}
+              </h4>
+              <p class="game-hours">
+                {{ game.hours }} 小时
+              </p>
               <div class="progress-bar">
-                <div class="progress-fill" :style="{ width: game.progress + '%' }" />
+                <div
+                  class="progress-fill"
+                  :style="{ width: game.progress + '%' }"
+                />
               </div>
             </div>
           </div>
@@ -29,23 +52,41 @@
 
       <!-- 游戏档案 -->
       <div class="steam-card">
-        <h3 class="card-subtitle">游戏档案</h3>
+        <h3 class="card-subtitle">
+          游戏档案
+        </h3>
         <div class="stats-grid">
           <div class="stat-box">
-            <div class="stat-num pink">128</div>
-            <div class="stat-label">游戏总数</div>
+            <div class="stat-num pink">
+              128
+            </div>
+            <div class="stat-label">
+              游戏总数
+            </div>
           </div>
           <div class="stat-box">
-            <div class="stat-num pink">2,847</div>
-            <div class="stat-label">总时长(h)</div>
+            <div class="stat-num pink">
+              2,847
+            </div>
+            <div class="stat-label">
+              总时长(h)
+            </div>
           </div>
           <div class="stat-box">
-            <div class="stat-num pink">42</div>
-            <div class="stat-label">完美通关</div>
+            <div class="stat-num pink">
+              42
+            </div>
+            <div class="stat-label">
+              完美通关
+            </div>
           </div>
           <div class="stat-box">
-            <div class="stat-num pink">3,156</div>
-            <div class="stat-label">成就数</div>
+            <div class="stat-num pink">
+              3,156
+            </div>
+            <div class="stat-label">
+              成就数
+            </div>
           </div>
         </div>
         <div class="game-tags">

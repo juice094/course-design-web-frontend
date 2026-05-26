@@ -1,14 +1,35 @@
 <template>
   <div class="stats-bar">
-    <div v-for="stat in stats" :key="stat.label" class="stat-item">
-      <div class="stat-icon" :class="stat.color">
-        <svg class="stat-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" :d="stat.icon" />
+    <div
+      v-for="stat in stats"
+      :key="stat.label"
+      class="stat-item"
+    >
+      <div
+        class="stat-icon"
+        :class="stat.color"
+      >
+        <svg
+          class="stat-svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            :d="stat.icon"
+          />
         </svg>
       </div>
       <div class="stat-body">
-        <div class="stat-value">{{ stat.value }}</div>
-        <div class="stat-label">{{ stat.label }}</div>
+        <div class="stat-value">
+          {{ stat.value }}
+        </div>
+        <div class="stat-label">
+          {{ stat.label }}
+        </div>
       </div>
     </div>
   </div>

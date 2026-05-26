@@ -2,15 +2,35 @@
   <div class="profile-card">
     <div class="profile-header">
       <div class="avatar-wrap">
-        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=gsau-dev" alt="avatar" class="avatar" />
+        <img
+          src="https://api.dicebear.com/7.x/avataaars/svg?seed=gsau-dev"
+          alt="avatar"
+          class="avatar"
+        >
       </div>
       <div class="profile-info">
         <div class="profile-meta">
-          <h1 class="name">星辉</h1>
+          <h1 class="name">
+            星辉
+          </h1>
           <span class="school-tag">
-            <svg class="tag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            <svg
+              class="tag-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 14l9-5-9-5-9 5 9 5z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+              />
             </svg>
             甘肃农业大学 · 计算机科学与技术
           </span>
@@ -24,26 +44,50 @@
     <div class="profile-footer">
       <div class="stats">
         <div class="stat">
-          <div class="stat-num indigo">12</div>
-          <div class="stat-label">项目</div>
+          <div class="stat-num indigo">
+            12
+          </div>
+          <div class="stat-label">
+            项目
+          </div>
         </div>
         <div class="stat-divider" />
         <div class="stat">
-          <div class="stat-num purple">36</div>
-          <div class="stat-label">课程</div>
+          <div class="stat-num purple">
+            36
+          </div>
+          <div class="stat-label">
+            课程
+          </div>
         </div>
         <div class="stat-divider" />
         <div class="stat">
-          <div class="stat-num pink">128</div>
-          <div class="stat-label">游戏</div>
+          <div class="stat-num pink">
+            128
+          </div>
+          <div class="stat-label">
+            游戏
+          </div>
         </div>
       </div>
 
       <div class="socials">
-        <SocialButton type="github" url="https://github.com" />
-        <SocialButton type="steam" url="https://steamcommunity.com" />
-        <SocialButton type="email" @click="copyEmail" />
-        <SocialButton type="qq" @click="copyQQ" />
+        <SocialButton
+          type="github"
+          url="https://github.com"
+        />
+        <SocialButton
+          type="steam"
+          url="https://steamcommunity.com"
+        />
+        <SocialButton
+          type="email"
+          @click="copyEmail"
+        />
+        <SocialButton
+          type="qq"
+          @click="copyQQ"
+        />
       </div>
     </div>
   </div>

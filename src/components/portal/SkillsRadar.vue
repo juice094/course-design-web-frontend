@@ -2,15 +2,30 @@
   <div class="section">
     <div class="section-header">
       <div class="section-icon emerald-bg">
-        <svg class="icon-svg emerald" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <svg
+          class="icon-svg emerald"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
         </svg>
       </div>
-      <h2 class="section-title">技能雷达</h2>
+      <h2 class="section-title">
+        技能雷达
+      </h2>
     </div>
 
     <div class="radar-card">
-      <div ref="chartRef" class="radar-chart" />
+      <div
+        ref="chartRef"
+        class="radar-chart"
+      />
     </div>
   </div>
 </template>
@@ -27,7 +42,7 @@ echarts.use([RadarChart, RadarComponent, TooltipComponent, LegendComponent, Canv
 
 const chartRef = ref<HTMLDivElement>()
 const themeStore = useThemeStore()
-let chart: any = null
+let chart: echarts.ECharts | null = null
 
 const getOption = () => {
   const isDark = themeStore.isDark

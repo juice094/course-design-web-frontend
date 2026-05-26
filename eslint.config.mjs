@@ -9,6 +9,16 @@ export default tseslint.config(
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
     languageOptions: {
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        HTMLDivElement: 'readonly'
+      },
       parserOptions: {
         parser: tseslint.parser
       }

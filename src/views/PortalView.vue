@@ -2,38 +2,27 @@
   <div class="portal-page">
     <PortalBackground />
     <PortalNavbar />
+    <PortalSettings />
 
     <main class="portal-main">
       <div class="portal-content">
-        <!-- 上半部分：学校门户区 -->
-        <section class="school-section">
-          <ProfileCard />
-          <div class="two-col-equal">
-            <SchoolStats />
-            <SchoolQuickLinks />
-          </div>
-        </section>
-
-        <!-- 下半部分：个人展示区 -->
-        <section class="personal-section">
-          <IdentityCards />
-          <ProjectShowcase />
-
-          <div class="two-col">
-            <SteamHub />
-            <SkillsRadar />
-          </div>
-        </section>
-
-        <SiteDashboard />
+        <component
+          :is="componentMap[section.id]"
+          v-for="section in enabledSections"
+          :key="section.id"
+        />
       </div>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { usePortalStore } from '@/stores/portal'
+
 import PortalBackground from '@/components/portal/PortalBackground.vue'
 import PortalNavbar from '@/components/portal/PortalNavbar.vue'
+import PortalSettings from '@/components/portal/PortalSettings.vue'
 import ProfileCard from '@/components/portal/ProfileCard.vue'
 import SchoolStats from '@/components/portal/SchoolStats.vue'
 import SchoolQuickLinks from '@/components/portal/SchoolQuickLinks.vue'
@@ -42,10 +31,26 @@ import ProjectShowcase from '@/components/portal/ProjectShowcase.vue'
 import SteamHub from '@/components/portal/SteamHub.vue'
 import SkillsRadar from '@/components/portal/SkillsRadar.vue'
 import SiteDashboard from '@/components/portal/SiteDashboard.vue'
+import CustomCards from '@/components/portal/CustomCards.vue'
+
+const portalStore = usePortalStore()
+
+const componentMap: Record<string, any> = {
+  profileCard: ProfileCard,
+  schoolStats: SchoolStats,
+  schoolLinks: SchoolQuickLinks,
+  identityCards: IdentityCards,
+  projectShowcase: ProjectShowcase,
+  steamHub: SteamHub,
+  skillsRadar: SkillsRadar,
+  customCards: CustomCards,
+  siteDashboard: SiteDashboard,
+}
+
+const enabledSections = computed(() => portalStore.enabledSections)
 </script>
 
 <style>
-/* Portal 页面全局样式（仅在 PortalView 加载时注入） */
 .portal-page {
   min-height: 100vh;
   position: relative;
@@ -77,49 +82,9 @@ import SiteDashboard from '@/components/portal/SiteDashboard.vue'
 .portal-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 100%;
   margin-top: 1.5rem;
-}
-
-/* 学校门户区：紧凑间距 */
-.school-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* 个人展示区：标准间距 */
-.personal-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-@media (min-width: 1024px) {
-  .two-col {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.two-col-equal {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .two-col-equal {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 /* 滚动条美化（仅 Portal 页面） */

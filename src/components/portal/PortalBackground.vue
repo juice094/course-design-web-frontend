@@ -1,11 +1,24 @@
 <template>
   <div class="portal-bg">
-    <div class="gradient-flow" />
+    <div
+      class="gradient-flow"
+      :class="{ animated: config.background.gradientAnimated }"
+      :style="bgStyle"
+    />
     <div class="overlay" />
     <div class="glow glow-tl" />
     <div class="glow glow-br" />
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { usePortalStore } from '@/stores/portal'
+
+const portalStore = usePortalStore()
+const config = computed(() => portalStore.config)
+const bgStyle = computed(() => portalStore.bgStyle)
+</script>
 
 <style scoped>
 .portal-bg {
@@ -22,8 +35,10 @@
   z-index: -8;
   opacity: 0.6;
   mix-blend-mode: color;
-  background: linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb);
-  background-size: 400% 400%;
+  background-size: 400% 400% !important;
+}
+
+.gradient-flow.animated {
   animation: gradientMove 15s ease infinite;
 }
 

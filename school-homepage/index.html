@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甘肃农业大学</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ===== 幻灯片容器 ===== */
+        .slideshow {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(1.03);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 6s ease-out;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.02) saturate(1.1);
+        }
+
+        /* 底部渐变遮罩 - 加深加宽，更柔和 */
+        .slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 55%;
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 40%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* 顶部渐变遮罩 */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ===== 顶部导航 ===== */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 50px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+            transition: background 0.3s;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+        }
+
+        .logo-text span {
+            font-size: 10px;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 20px;
+            border-radius: 24px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+            border: 1px solid transparent;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fff;
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        /* ===== 底部信息 ===== */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 30px 50px 42px;
+            background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+        }
+
+        .slide-caption {
+            font-size: 26px;
+            font-weight: 300;
+            letter-spacing: 6px;
+            margin-bottom: 22px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+            text-shadow: 0 2px 16px rgba(0,0,0,0.6);
+        }
+
+        .slide-caption.show {
+            opacity: 0.95;
+            transform: translateY(0);
+        }
+
+        /* 指示器 */
+        .indicators {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .indicator {
+            width: 28px;
+            height: 2px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 1px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .indicator:hover { background: rgba(255,255,255,0.45); }
+
+        .indicator.active {
+            width: 52px;
+            background: rgba(255,255,255,0.25);
+        }
+
+        .indicator.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            border-radius: 1px;
+            animation: progress var(--duration) linear forwards;
+        }
+
+        @keyframes progress {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* 控制按钮 */
+        .controls {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 50%;
+            color: rgba(255,255,255,0.75);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .ctrl-btn:hover {
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.35);
+            color: #fff;
+            transform: scale(1.08);
+        }
+
+        /* 页码 */
+        .page-num {
+            position: fixed;
+            left: 50px;
+            bottom: 47px;
+            z-index: 100;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 2px;
+        }
+
+        .page-num .current {
+            font-size: 20px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .topbar { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .logo-text h1 { font-size: 16px; }
+            .bottom-bar { padding: 20px 20px 30px; }
+            .slide-caption { font-size: 18px; letter-spacing: 3px; }
+            .controls { right: 15px; }
+            .ctrl-btn { width: 36px; height: 36px; font-size: 14px; }
+            .page-num { left: 20px; bottom: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 幻灯片 -->
+    <div class="slideshow">
+        <div class="slide active">
+            <img src="images/hd/slide1.jpg" alt="校园风光">
+        </div>
+        <div class="slide">
+            <img src="images/hd/slide2.jpg" alt="教学科研区">
+        </div>
+        <div class="slide">
+            <img src="images/hd/slide3.jpg" alt="校园秋景">
+        </div>
+        <div class="slide">
+            <img src="images/hd/slide4.jpg" alt="校园亭台">
+        </div>
+        <div class="slide">
+            <img src="images/hd/slide5.jpg" alt="认知馆">
+        </div>
+        <div class="slide">
+            <img src="images/hd/slide6.jpg" alt="校园雪景">
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <div class="topbar">
+        <div class="logo">
+            <div class="logo-icon">甘农</div>
+            <div class="logo-text">
+                <h1>甘肃农业大学</h1>
+                <span>GANSU AGRICULTURAL UNIVERSITY</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="https://www.gsau.edu.cn/" target="_blank">学校官网</a>
+            <a href="#">学校概况</a>
+            <a href="#">招生就业</a>
+            <a href="#">校园文化</a>
+        </div>
+    </div>
+
+    <!-- 底部信息 -->
+    <div class="bottom-bar">
+        <div class="slide-caption show" id="caption">校园风光</div>
+        <div class="indicators" id="indicators"></div>
+    </div>
+
+    <!-- 页码 -->
+    <div class="page-num">
+        <span class="current" id="pageNum">01</span> / <span id="totalNum">06</span>
+    </div>
+
+    <!-- 侧边控制 -->
+    <div class="controls">
+        <button class="ctrl-btn" id="prevBtn" title="上一张">‹</button>
+        <button class="ctrl-btn" id="playBtn" title="暂停/播放">❚❚</button>
+        <button class="ctrl-btn" id="nextBtn" title="下一张">›</button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const caption = document.getElementById('caption');
+        const pageNum = document.getElementById('pageNum');
+        const indicatorsEl = document.getElementById('indicators');
+        const playBtn = document.getElementById('playBtn');
+
+        const captions = ['校园风光', '教学科研区', '校园秋景', '校园亭台', '认知馆', '校园雪景'];
+        const duration = 5000; // 每张停留5秒
+        let current = 0;
+        let timer = null;
+        let playing = true;
+
+        // 创建指示器
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'indicator' + (i === 0 ? ' active' : '');
+            dot.style.setProperty('--duration', duration + 'ms');
+            dot.addEventListener('click', () => goTo(i));
+            indicatorsEl.appendChild(dot);
+        });
+
+        const indicators = document.querySelectorAll('.indicator');
+
+        function goTo(index) {
+            slides[current].classList.remove('active');
+            indicators[current].classList.remove('active');
+            caption.classList.remove('show');
+
+            current = (index + slides.length) % slides.length;
+
+            slides[current].classList.add('active');
+            indicators[current].classList.add('active');
+            pageNum.textContent = String(current + 1).padStart(2, '0');
+
+            setTimeout(() => {
+                caption.textContent = captions[current];
+                caption.classList.add('show');
+            }, 100);
+
+            resetTimer();
+        }
+
+        function next() { goTo(current + 1); }
+        function prev() { goTo(current - 1); }
+
+        function resetTimer() {
+            clearInterval(timer);
+            if (playing) {
+                timer = setInterval(next, duration);
+            }
+        }
+
+        // 控制按钮
+        document.getElementById('nextBtn').addEventListener('click', next);
+        document.getElementById('prevBtn').addEventListener('click', prev);
+
+        playBtn.addEventListener('click', () => {
+            playing = !playing;
+            playBtn.textContent = playing ? '❚❚' : '▶';
+            if (playing) resetTimer();
+            else clearInterval(timer);
+        });
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+            if (e.key === ' ') { e.preventDefault(); playBtn.click(); }
+        });
+
+        // 触摸滑动
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+        });
+
+        // 启动
+        resetTimer();
+    </script>
+</body>
+</html>

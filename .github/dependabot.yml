@@ -1,0 +1,40 @@
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+    open-pull-requests-limit: 10
+    reviewers:
+      - juice094
+    labels:
+      - dependencies
+    commit-message:
+      prefix: 'deps'
+      include: scope
+    ignore:
+      # Pin Element Plus to avoid breaking style changes
+      - dependency-name: element-plus
+        update-types: [version-update:semver-major]
+      # Pin Vue to avoid breaking changes
+      - dependency-name: vue
+        update-types: [version-update:semver-major]
+      - dependency-name: vue-router
+        update-types: [version-update:semver-major]
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    reviewers:
+      - juice094
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: 'ci'
+      include: scope

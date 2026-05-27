@@ -8,6 +8,11 @@ import App from './App.vue'
 import router from './router'
 import { permissionDirective } from './directives/permission'
 
+// SAFETY: ElMessageBox/ElMessage 是 JS API 调用（非模板组件），
+// unplugin-vue-components 不会自动注入它们的样式，需显式导入。
+import 'element-plus/theme-chalk/el-message-box.css'
+import 'element-plus/theme-chalk/el-message.css'
+
 import './styles/index.scss'
 
 const app = createApp(App)

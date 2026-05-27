@@ -30,7 +30,7 @@ const bgStyle = computed(() => portalStore.bgStyle)
 .portal-bg {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }

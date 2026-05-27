@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甘肃农业大学</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* ===== 顶部栏 ===== */
+        .top-bar {
+            background: #1a5f2a;
+            color: #fff;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+
+        .top-links a:hover { color: #c9a227; }
+
+        /* ===== 头部 ===== */
+        .header {
+            background: #fff;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1a5f2a, #2d8a3e);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            color: #1a5f2a;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        /* ===== 导航 ===== */
+        .nav {
+            background: #1a5f2a;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+        }
+
+        .nav-list li { position: relative; }
+
+        .nav-list a {
+            display: block;
+            padding: 14px 22px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            transition: background 0.3s;
+        }
+
+        .nav-list a:hover { background: #0d3d16; }
+
+        /* ===== 轮播图区域 ===== */
+        .banner-section {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .banner-slider {
+            position: relative;
+            height: 100%;
+        }
+
+        .banner-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .banner-slide.active { opacity: 1; }
+
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 轮播指示器 */
+        .banner-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #c9a227;
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        /* 左右箭头 */
+        .banner-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-arrow:hover { background: rgba(0,0,0,0.5); }
+
+        .banner-arrow.prev { left: 20px; }
+        .banner-arrow.next { right: 20px; }
+
+        /* ===== 快捷入口 ===== */
+        .quick-links {
+            background: #fff;
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 15px;
+        }
+
+        .quick-item {
+            text-align: center;
+            padding: 15px 10px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .quick-item:hover {
+            background: #f0f7f0;
+            color: #1a5f2a;
+        }
+
+        .quick-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #1a5f2a, #2d8a3e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .quick-item:hover .quick-icon {
+            background: linear-gradient(135deg, #c9a227, #e0b52f);
+        }
+
+        .quick-text {
+            font-size: 13px;
+        }
+
+
+        .news-section {
+            padding: 40px 0;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .news-box {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(90deg, #1a5f2a, #2d8a3e);
+            color: #fff;
+        }
+
+        .news-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .news-header .more {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .news-list {
+            padding: 15px 20px;
+            list-style: none;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .news-item:last-child { border-bottom: none; }
+
+        .news-date {
+            background: #f0f7f0;
+            color: #1a5f2a;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-align: center;
+            min-width: 50px;
+            margin-right: 15px;
+        }
+
+        .news-date .day {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            line-height: 1;
+        }
+
+        .news-date .month {
+            font-size: 11px;
+        }
+
+        .news-content a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-content a:hover { color: #1a5f2a; }
+
+        /* ===== 底部 ===== */
+        .footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 40px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a5f2a;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #999;
+            text-decoration: none;
+            font-size: 13px;
+            line-height: 2;
+            display: block;
+        }
+
+        .footer-section a:hover { color: #c9a227; }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .quick-grid { grid-template-columns: repeat(4, 1fr); }
+            .news-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-list { flex-wrap: wrap; }
+            .nav-list a { padding: 10px 15px; font-size: 13px; }
+            .banner-section { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部栏 -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <span data-zh="欢迎来到甘肃农业大学官方网站" data-en="Welcome to Gansu Agricultural University">欢迎来到甘肃农业大学官方网站</span>
+                <div class="top-links">
+                    <a href="https://www.gsau.edu.cn/" target="_blank" data-zh="旧版入口" data-en="Old Version">旧版入口</a>
+                    <a href="https://cn.bing.com/maps/search?mepi=60%7E%7EEmbedded%7ELargeMapLink&ty=18&v=2&sV=1&qpvt=%E7%94%98%E8%82%83%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6%E5%9C%B0%E5%9D%80%E5%9C%B0%E5%9B%BE&FORM=MIRE&q=%E7%94%98%E8%82%83%E7%9C%81%E5%85%B0%E5%B7%9E%E5%B8%82%E7%94%98%E8%82%83%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6&ppois=36.090576171875_103.70084381103516_%E7%94%98%E8%82%83%E7%9C%81%E5%85%B0%E5%B7%9E%E5%B8%82%E7%94%98%E8%82%83%E5%86%9C%E4%B8%9A%E5%A4%A7%E5%AD%A6_%7E&cp=q0fx9msn7m05&lvl=16.1&style=r" target="_blank" data-zh="网站地图" data-en="Sitemap">网站地图</a>
+                    <a href="javascript:void(0)" id="langToggle" data-zh="English" data-en="中文">English</a>
+                    <a href="https://ehall.gsau.edu.cn/new/index.html" target="_blank" data-zh="信息融合门户" data-en="Portal">信息融合门户</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">甘农</div>
+                    <div class="logo-text">
+                        <h1>甘肃农业大学</h1>
+                        <p>GANSU AGRICULTURAL UNIVERSITY</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 导航 -->
+    <nav class="nav">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="gsau-style.html" data-zh="首页" data-en="Home">首页</a></li>
+                <li><a href="#" data-zh="学校概况" data-en="About Us">学校概况</a></li>
+                <li><a href="#" data-zh="机构设置" data-en="Organization">机构设置</a></li>
+                <li><a href="#" data-zh="学科师资" data-en="Disciplines">学科师资</a></li>
+                <li><a href="#" data-zh="人才培养" data-en="Education">人才培养</a></li>
+                <li><a href="#" data-zh="招生就业" data-en="Admissions">招生就业</a></li>
+                <li><a href="#" data-zh="科学研究" data-en="Research">科学研究</a></li>
+                <li><a href="#" data-zh="合作交流" data-en="Cooperation">合作交流</a></li>
+                <li><a href="#" data-zh="校园文化" data-en="Campus Culture">校园文化</a></li>
+                <li><a href="#" data-zh="校友之家" data-en="Alumni">校友之家</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 轮播图 -->
+    <section class="banner-section">
+        <div class="banner-slider">
+            <div class="banner-slide active">
+                <img src="images/ai_hd/AI超清_07a6325a5ef3d3355f53efdcaa74b4ce.png" alt="校园风光">
+            </div>
+            <div class="banner-slide">
+                <img src="images/ai_hd/AI超清_7ffdbe467e45c930af56458e79cc7c7f.png" alt="教学科研区">
+            </div>
+            <div class="banner-slide">
+                <img src="images/ai_hd/AI超清_907fab8fe7f0b142c7da41709265145a.png" alt="校园秋景">
+            </div>
+            <div class="banner-slide">
+                <img src="images/ai_hd/AI超清_62000cec49f36c2ce1566ebd3e5f182f.png" alt="校园亭台">
+            </div>
+            <div class="banner-slide">
+                <img src="images/ai_hd/AI超清_f0786bde53d2983cdaed60c2ef67166d.png" alt="认知馆">
+            </div>
+            <div class="banner-slide">
+                <img src="images/ai_hd/AI超清_ce1536d8fc079c1e6a7f42ceaaf36256.png" alt="校园雪景">
+            </div>
+        </div>
+        <button class="banner-arrow prev" onclick="prevSlide()">‹</button>
+        <button class="banner-arrow next" onclick="nextSlide()">›</button>
+        <div class="banner-dots" id="bannerDots"></div>
+    </section>
+
+    <!-- 快捷入口 -->
+    <section class="quick-links">
+        <div class="container">
+            <div class="quick-grid">
+                <a href="library.html" class="quick-item">
+                    <div class="quick-icon">📚</div>
+                    <div class="quick-text" data-zh="校图书馆" data-en="Library">校图书馆</div>
+                </a>
+                <a href="email.html" class="quick-item">
+                    <div class="quick-icon">✉️</div>
+                    <div class="quick-text" data-zh="邮件服务" data-en="Email">邮件服务</div>
+                </a>
+                <a href="info.html" class="quick-item">
+                    <div class="quick-icon">📋</div>
+                    <div class="quick-text" data-zh="信息公开" data-en="Info">信息公开</div>
+                </a>
+                <a href="academic.html" class="quick-item">
+                    <div class="quick-icon">🎓</div>
+                    <div class="quick-text" data-zh="教务管理" data-en="Academic">教务管理</div>
+                </a>
+                <a href="jobs.html" class="quick-item">
+                    <div class="quick-icon">👥</div>
+                    <div class="quick-text" data-zh="人才招聘" data-en="Careers">人才招聘</div>
+                </a>
+                <a href="finance.html" class="quick-item">
+                    <div class="quick-icon">💰</div>
+                    <div class="quick-text" data-zh="财务查询" data-en="Finance">财务查询</div>
+                </a>
+                <a href="procurement.html" class="quick-item">
+                    <div class="quick-icon">📦</div>
+                    <div class="quick-text" data-zh="招标采购" data-en="Procurement">招标采购</div>
+                </a>
+                <a href="lab.html" class="quick-item">
+                    <div class="quick-icon">🔬</div>
+                    <div class="quick-text" data-zh="国重实验室" data-en="Key Lab">国重实验室</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+<!-- 新闻区域 -->
+    <section class="news-section">
+        <div class="container">
+            <div class="news-grid">
+                <!-- 学校要闻 -->
+                <div class="news-box">
+                    <div class="news-header">
+                        <h3 data-zh="学校要闻" data-en="University News">学校要闻</h3>
+                        <a href="#" class="more" data-zh="更多 →" data-en="More →">更多 →</a>
+                    </div>
+                    <ul class="news-list">
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">26</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="仲恺农业工程学院党委书记翟雪梅一行来校调研交流" data-en="Secretary Zhai Xuemei of Zhongkai University of Agriculture and Engineering Visited Our University">仲恺农业工程学院党委书记翟雪梅一行来校调研交流</a>
+                            </div>
+                        </li>
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">24</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="省纪委常务副书记、省监委副主任李寿伟来校调研指导工作" data-en="Li Shouwei, Deputy Secretary of Gansu Provincial Commission for Discipline Inspection, Visited for Inspection">省纪委常务副书记、省监委副主任李寿伟来校调研指导工作</a>
+                            </div>
+                        </li>
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">23</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="我校2026年田径运动会圆满闭幕" data-en="2026 GSAU Track and Field Sports Meet Successfully Concluded">我校2026年田径运动会圆满闭幕</a>
+                            </div>
+                        </li>
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">23</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="我校食品科学与工程专业接受工程教育认证专家进校考查" data-en="Food Science and Engineering Program Underwent Engineering Education Accreditation">我校食品科学与工程专业接受工程教育认证专家进校考查</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 通知公告 -->
+                <div class="news-box">
+                    <div class="news-header">
+                        <h3 data-zh="通知公告" data-en="Notices">通知公告</h3>
+                        <a href="#" class="more" data-zh="更多 →" data-en="More →">更多 →</a>
+                    </div>
+                    <ul class="news-list">
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">05</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="甘肃农业大学建校80周年公告（第二号）" data-en="GSAU 80th Anniversary Announcement (No.2)">甘肃农业大学建校80周年公告（第二号）</a>
+                            </div>
+                        </li>
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">26</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="甘肃农业大学2026年高等学历继续教育招生简章" data-en="GSAU 2026 Continuing Education Admissions Brochure">甘肃农业大学2026年高等学历继续教育招生简章</a>
+                            </div>
+                        </li>
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">25</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="关于举办2026年度优秀教材展的通知" data-en="Notice on Hosting the 2026 Excellent Textbook Exhibition">关于举办2026年度优秀教材展的通知</a>
+                            </div>
+                        </li>
+                        <li class="news-item">
+                            <div class="news-date">
+                                <span class="day">12</span>
+                                <span class="month">05月</span>
+                            </div>
+                            <div class="news-content">
+                                <a href="#" data-zh="关于做好附属总校2026年新生摸底登记的通知" data-en="Notice on 2026 New Student Registration for Affiliated School">关于做好附属总校2026年新生摸底登记的通知</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- 底部 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4 data-zh="联系我们" data-en="Contact Us">联系我们</h4>
+                    <p data-zh="学校地址：兰州市安宁区营门村1号" data-en="Address: No.1 Yingmencun, Anning District, Lanzhou">学校地址：兰州市安宁区营门村1号</p>
+                    <p data-zh="邮编：730070" data-en="Zip Code: 730070">邮编：730070</p>
+                    <p data-zh="投稿邮箱：xwzx@gsau.edu.cn" data-en="Email: xwzx@gsau.edu.cn">投稿邮箱：xwzx@gsau.edu.cn</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-zh="快速链接" data-en="Quick Links">快速链接</h4>
+                    <a href="#" data-zh="校图书馆" data-en="Library">校图书馆</a>
+                    <a href="#" data-zh="信息融合门户" data-en="Portal">信息融合门户</a>
+                    <a href="#" data-zh="本科教育" data-en="Undergraduate">本科教育</a>
+                    <a href="#" data-zh="研究生教育" data-en="Graduate">研究生教育</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-zh="相关网站" data-en="Related Links">相关网站</h4>
+                    <a href="#" data-zh="教育部" data-en="Ministry of Education">教育部</a>
+                    <a href="#" data-zh="农业农村部" data-en="Ministry of Agriculture">农业农村部</a>
+                    <a href="#" data-zh="甘肃省教育厅" data-en="Gansu Education Department">甘肃省教育厅</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-zh="关注我们" data-en="Follow Us">关注我们</h4>
+                    <p data-zh="官方微信：甘肃农业大学" data-en="WeChat: GSAU">官方微信：甘肃农业大学</p>
+                    <p data-zh="官方微博：@甘肃农业大学" data-en="Weibo: @GSAU">官方微博：@甘肃农业大学</p>
+                    <p data-zh="官方抖音：甘肃农业大学" data-en="Douyin: GSAU">官方抖音：甘肃农业大学</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2015-2026 甘肃农业大学 All rights reserved</p>
+                <p>网站备案号：陇ICP备16004040号-1 | 甘公网安备 62010002000215号</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 背景图片 3 -->
+    <section class="bg-section bg-section-3">
+        <div class="bg-overlay" style="background: rgba(0,0,0,0.5);">
+        </div>
+    </section>
+
+    <script>
+        // 中英文切换
+        let isEnglish = false;
+        document.getElementById('langToggle').addEventListener('click', function () {
+            isEnglish = !isEnglish;
+            const lang = isEnglish ? 'en' : 'zh';
+            document.querySelectorAll('[data-zh]').forEach(el => {
+                el.textContent = el.getAttribute('data-' + lang);
+            });
+            document.documentElement.lang = isEnglish ? 'en' : 'zh-CN';
+        });
+
+        // 轮播图功能
+        const slides = document.querySelectorAll('.banner-slide');
+        const dotsContainer = document.getElementById('bannerDots');
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        // 创建指示点
+        slides.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.className = 'dot' + (index === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(index);
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            showSlide((currentSlide + 1) % totalSlides);
+        }
+
+        function prevSlide() {
+            showSlide((currentSlide - 1 + totalSlides) % totalSlides);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            resetTimer();
+        }
+
+        // 自动播放
+        let timer = setInterval(nextSlide, 5000);
+
+        function resetTimer() {
+            clearInterval(timer);
+            timer = setInterval(nextSlide, 5000);
+        }
+
+        // 鼠标悬停暂停
+        const bannerSection = document.querySelector('.banner-section');
+        bannerSection.addEventListener('mouseenter', () => clearInterval(timer));
+        bannerSection.addEventListener('mouseleave', resetTimer);
+    </script>
+</body>
+</html>

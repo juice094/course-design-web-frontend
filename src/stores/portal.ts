@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import defaultBg from '@/assets/portal-bg.jpg'
 
 const STORAGE_KEY = 'portal-config-v1'
 
@@ -39,9 +40,8 @@ export interface PortalConfig {
   customCards: CustomCard[]
 }
 
-// 默认背景图路径：public/portal-bg.jpg，通过相对路径引用
-// 用户可把任意图片放入 public/ 目录并在设置面板切换
-const DEFAULT_IMAGE_URL = './portal-bg.jpg'
+// Vite 处理后的默认背景图 URL，开发和生产环境路径自动正确
+const DEFAULT_IMAGE_URL = defaultBg
 
 const defaultConfig: PortalConfig = {
   background: {

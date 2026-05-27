@@ -1,6 +1,16 @@
 // 个人资料静态配置 —— 真实账号数据
 // 集中管理所有社交链接、GitHub 项目、Steam 游戏数据
 
+export const schoolInfo = {
+  name: '甘肃农业大学',
+  shortName: 'GSAU',
+  enName: 'Gansu Agricultural University',
+  website: 'https://www.gsau.edu.cn/',
+  motto: '敦品励学，笃志允能',
+  location: '甘肃省兰州市安宁区营门村1号',
+  established: 1946,
+} as const
+
 export const socialLinks = {
   github: {
     url: 'https://github.com/juice094',

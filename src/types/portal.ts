@@ -28,8 +28,21 @@ export interface SectionConfig {
   order: number
 }
 
+export interface IdentityCardLink {
+  internalUrl: string
+  externalUrl: string
+  customUrl: string
+}
+
+export interface IdentityCardLinksConfig {
+  student: IdentityCardLink
+  teacher: IdentityCardLink
+  developer: IdentityCardLink
+}
+
 export interface PortalConfig {
   background: BackgroundConfig
   sections: SectionConfig[]
   customCards: CustomCard[]
+  identityCardLinks: IdentityCardLinksConfig
 }

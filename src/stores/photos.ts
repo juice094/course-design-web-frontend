@@ -1,19 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+import type { Photo, PhotoCategory } from '@/types/content'
+export type { Photo, PhotoCategory } from '@/types/content'
+
 const STORAGE_KEY = 'portal-photos-v1'
-
-export type PhotoCategory = 'campus' | 'project' | 'life' | 'certificate'
-
-export interface Photo {
-  id: string
-  url: string
-  thumbnail?: string
-  title: string
-  description?: string
-  category: PhotoCategory
-  date: string
-}
 
 const demoPhotos: Photo[] = [
   {

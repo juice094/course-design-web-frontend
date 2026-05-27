@@ -1,18 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+import type { Achievement, AchievementLevel } from '@/types/content'
+export type { Achievement, AchievementLevel } from '@/types/content'
+
 const STORAGE_KEY = 'portal-achievements-v1'
-
-export type AchievementLevel = 'national' | 'provincial' | 'school' | 'other'
-
-export interface Achievement {
-  id: string
-  title: string
-  level: AchievementLevel
-  date: string
-  description?: string
-  certificateUrl?: string
-}
 
 const levelLabels: Record<AchievementLevel, string> = {
   national: '国家级',

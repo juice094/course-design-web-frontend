@@ -1,22 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+import type { Article, ArticleCategory } from '@/types/content'
+export type { Article, ArticleCategory } from '@/types/content'
+
 const STORAGE_KEY = 'portal-articles-v1'
-
-export type ArticleCategory = 'paper' | 'article' | 'tutorial' | 'note'
-
-export interface Article {
-  id: string
-  title: string
-  description: string
-  content: string
-  cover?: string
-  tags: string[]
-  date: string
-  category: ArticleCategory
-  published: boolean
-  url?: string
-}
 
 const demoArticles: Article[] = [
   {

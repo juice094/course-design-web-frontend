@@ -1,44 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import defaultBg from '@/assets/portal-bg.jpg'
+import type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig } from '@/types/portal'
+export type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig } from '@/types/portal'
 
 const STORAGE_KEY = 'portal-config-v1'
-
-export type GradientDirection = 'to right' | 'to left' | 'to top' | 'to bottom' | 'to top right' | 'to top left' | 'to bottom right' | 'to bottom left' | '-45deg' | '45deg'
-
-export type CardColor = 'blue' | 'emerald' | 'amber' | 'rose' | 'purple' | 'indigo' | 'cyan' | 'orange'
-
-export interface CustomCard {
-  id: string
-  title: string
-  description: string
-  url: string
-  color: CardColor
-  iconPath: string
-}
-
-export interface BackgroundConfig {
-  type: 'gradient' | 'solid' | 'image'
-  gradientFrom: string
-  gradientTo: string
-  gradientDirection: GradientDirection
-  gradientAnimated: boolean
-  solidColor: string
-  imageUrl: string
-}
-
-export interface SectionConfig {
-  id: string
-  name: string
-  enabled: boolean
-  order: number
-}
-
-export interface PortalConfig {
-  background: BackgroundConfig
-  sections: SectionConfig[]
-  customCards: CustomCard[]
-}
 
 // Vite 处理后的默认背景图 URL，开发和生产环境路径自动正确
 const DEFAULT_IMAGE_URL = defaultBg

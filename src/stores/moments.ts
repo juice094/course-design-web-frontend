@@ -1,16 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-const STORAGE_KEY = 'portal-moments-v1'
+import type { Moment } from '@/types/content'
+export type { Moment } from '@/types/content'
 
-export interface Moment {
-  id: string
-  content: string
-  images?: string[]
-  tags?: string[]
-  date: string
-  mood?: string
-}
+const STORAGE_KEY = 'portal-moments-v1'
 
 const demoMoments: Moment[] = [
   {

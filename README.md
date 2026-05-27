@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Vue-3.5.34-4FC08D?style=flat-square&logo=vue.js" alt="Vue">
   <img src="https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=flat-square&logo=typescript" alt="TypeScript">
   <img src="https://img.shields.io/badge/Vite-8.0.14-646CFF?style=flat-square&logo=vite" alt="Vite">
-  <img src="https://img.shields.io/badge/Element%20Plus-2.13.7-409EFF?style=flat-square" alt="Element Plus">
+  <img src="https://img.shields.io/badge/Element%20Plus-2.14.0-409EFF?style=flat-square" alt="Element Plus">
   <img src="https://img.shields.io/badge/ECharts-6.1.0-AA344D?style=flat-square" alt="ECharts">
   <img src="https://img.shields.io/badge/license-Private-red?style=flat-square" alt="License">
 </p>
@@ -45,19 +45,32 @@
 ### 访问路径
 
 ```
-/portal   → 公开访问，无需登录
-/         → 未登录用户自动重定向到 /portal
-/login    → 从 Portal 页点击"进入系统"跳转
+/portal          → 首页（个人名片 + 学校数据 + 技能雷达）
+/portal/academic → 学业中心（课程表 + 文章 + 成就）
+/portal/works    → 作品集（项目展示 + 照片墙 + Steam 游戏）
+/portal/space    → 个人空间（动态说说 + 自定义卡片）
+/portal/about    → 关于（扩展简历 + 联系方式）
+/                → 未登录用户自动重定向到 /portal
+/login           → 从 Portal 页点击"进入系统"跳转
 ```
+
+所有 `/portal/*` 路由均为**公开访问**，无需登录。顶部导航栏提供子页面切换。
 
 ### 页面模块
 
 | 模块 | 说明 | 数据来源 |
 |:---|:---|:---|
 | **个人名片** | 真实 GitHub 头像、学校标签、社交按钮 | `src/data/profile.ts` |
+| **学校统计** | 在校学生 / 开设课程 / 专任教师 / 科研成果 | 静态配置 |
+| **快速链接** | 学生选课 · 成绩查询 · 课表查询 · 办事大厅 | 静态配置 |
+| **课程表** | 周视图课程网格，支持可见性控制（公开/私密/白名单） | localStorage 持久化 |
 | **身份卡片** | 学生 / 开发者 / Steam 玩家 三栏卡片 | 静态配置 |
+| **文章展示** | 技术随笔、学术论文，支持 Markdown 详情 | localStorage 持久化 |
+| **获奖成就** | 时间线形式的教育/竞赛/证书成就 | localStorage 持久化 |
 | **项目展示** | 6 个真实 GitHub 仓库，OpenGraph 封面 | GitHub API 抓取 |
 | **游戏时光** | Steam 最近在玩 + 游戏档案统计 | Steam 公开页面抓取 |
+| **照片墙** | 网格布局图片展示，支持预览 | localStorage 持久化 |
+| **动态说说** | 类朋友圈短图文动态流 | localStorage 持久化 |
 | **技能雷达** | ECharts 雷达图，6 维度能力值 | 静态配置 |
 | **自定义卡片** | 用户可自由添加的链接卡片 | localStorage 持久化 |
 | **底部状态栏** | 翻页时钟 + 运行时间 + 技术栈徽章 | 静态配置 |
@@ -67,7 +80,7 @@
 点击导航栏齿轮图标打开**页面设置面板**：
 
 - **背景**：渐变（双色调色器 + 10 种方向 + 流动动画开关）/ 纯色 / 图片 URL
-- **模块管理**：9 个模块独立开关 + 拖拽排序
+- **模块管理**：14 个模块独立开关 + 拖拽排序
 - **自定义卡片**：自由添加标题/描述/URL/颜色/图标的链接卡片
 - **主题切换**：深色/浅色模式，localStorage 持久化
 
@@ -173,7 +186,11 @@ pnpm dev
 
 | 路径 | 说明 | 登录要求 |
 |:---|:---|:---:|
-| `/#/portal` | 个人主页/学校门户 | 否 |
+| `/#/portal` | 个人主页首页 | 否 |
+| `/#/portal/academic` | 学业中心（课程表/文章/成就） | 否 |
+| `/#/portal/works` | 作品集（项目/照片墙/Steam） | 否 |
+| `/#/portal/space` | 个人空间（动态/自定义卡片） | 否 |
+| `/#/portal/about` | 关于页 | 否 |
 | `/#/login` | 登录页 | 否 |
 | `/#/` | 后台首页（数据大屏） | 是 |
 | `/#/student` | 学生管理 | 是 |
@@ -202,25 +219,42 @@ pnpm build
 course-design-web-frontend/
 ├── src/
 │   ├── components/
-│   │   ├── portal/                 # Portal 页面组件（12 个）
+│   │   ├── portal/                 # Portal 页面组件（17+ 个）
 │   │   │   ├── PortalBackground.vue    # 渐变流动背景
-│   │   │   ├── PortalNavbar.vue        # 顶部玻璃导航
+│   │   │   ├── PortalNavbar.vue        # 顶部玻璃导航（含子页面菜单）
 │   │   │   ├── PortalSettings.vue      # 页面设置面板
 │   │   │   ├── ProfileCard.vue         # 个人名片
 │   │   │   ├── SchoolStats.vue         # 学校数据概览
 │   │   │   ├── SchoolQuickLinks.vue    # 快速功能入口
 │   │   │   ├── IdentityCards.vue       # 三重身份卡片
+│   │   │   ├── CourseSchedule.vue      # 课程表周视图
+│   │   │   ├── ArticlesSection.vue     # 文章展示（含 Markdown 详情）
+│   │   │   ├── AchievementsTimeline.vue # 成就时间线
 │   │   │   ├── ProjectShowcase.vue     # GitHub 项目展示
 │   │   │   ├── SteamHub.vue            # Steam 游戏展示
+│   │   │   ├── PhotoWall.vue           # 照片墙
+│   │   │   ├── MomentsFeed.vue         # 动态说说
 │   │   │   ├── SkillsRadar.vue         # 技能雷达图
 │   │   │   ├── SiteDashboard.vue       # 底部状态栏
 │   │   │   ├── CustomCards.vue         # 用户自定义卡片
-│   │   │   └── SocialButton.vue        # 社交图标按钮
+│   │   │   ├── SocialButton.vue        # 社交图标按钮
+│   │   │   ├── SettingsScheduleEditor.vue    # 课程设置编辑器
+│   │   │   ├── SettingsArticleEditor.vue     # 文章设置编辑器
+│   │   │   ├── SettingsPhotoEditor.vue       # 照片设置编辑器
+│   │   │   ├── SettingsMomentEditor.vue      # 动态设置编辑器
+│   │   │   └── SettingsAchievementEditor.vue # 成就设置编辑器
 │   │   ├── AppHeader.vue           # 后台顶部导航
 │   │   ├── AppLayout.vue           # 后台布局框架
 │   │   └── ...
+│   ├── layouts/
+│   │   └── PortalLayout.vue        # Portal 共享布局（背景 + 导航 + 设置面板）
 │   ├── views/
-│   │   ├── PortalView.vue          # Portal 页面总装
+│   │   ├── portal/
+│   │   │   ├── HomeView.vue        # 首页（名片 + 学校 + 技能雷达）
+│   │   │   ├── AcademicView.vue    # 学业中心（课程表 + 文章 + 成就）
+│   │   │   ├── WorksView.vue       # 作品集（项目 + 照片墙 + Steam）
+│   │   │   ├── SpaceView.vue       # 个人空间（动态 + 自定义卡片）
+│   │   │   └── AboutView.vue       # 关于页（扩展简历 + 联系方式）
 │   │   ├── LoginView.vue           # 登录页
 │   │   ├── HomeView.vue            # 后台首页（数据大屏）
 │   │   ├── StudentView.vue         # 学生管理
@@ -228,15 +262,20 @@ course-design-web-frontend/
 │   │   ├── ScoreView.vue           # 成绩管理
 │   │   └── ...
 │   ├── stores/
-│   │   ├── portal.ts               # Portal 配置状态（新增）
-│   │   ├── theme.ts                # 暗色模式状态（新增）
+│   │   ├── portal.ts               # Portal 配置状态（背景/模块/卡片）
+│   │   ├── theme.ts                # 暗色模式状态
+│   │   ├── schedule.ts             # 课程表数据 + 可见性控制
+│   │   ├── articles.ts             # 文章数据
+│   │   ├── photos.ts               # 照片墙数据
+│   │   ├── moments.ts              # 动态说说数据
+│   │   ├── achievements.ts         # 成就时间线数据
 │   │   ├── user.ts                 # 用户认证状态
 │   │   └── ...
 │   ├── data/
-│   │   └── profile.ts              # 个人资料静态配置（新增）
+│   │   └── profile.ts              # 个人资料静态配置
 │   ├── router/
 │   │   └── index.ts                # 路由 + 未登录重定向
-│   ├── App.vue                     # 根组件（Portal 跳过 Layout）
+│   ├── App.vue                     # 根组件（Portal/Login 跳过 Layout）
 │   └── main.ts                     # 应用入口
 ├── docs/
 │   └── 《大数据可视化》课程设计报告.doc

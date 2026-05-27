@@ -1,5 +1,5 @@
 <template>
-  <div class="portal-layout">
+  <div class="portal-layout" :class="{ dark: themeStore.isDark }">
     <PortalBackground />
     <PortalNavbar />
     <PortalSettings />
@@ -16,6 +16,9 @@
 import PortalBackground from '@/components/portal/PortalBackground.vue'
 import PortalNavbar from '@/components/portal/PortalNavbar.vue'
 import PortalSettings from '@/components/portal/PortalSettings.vue'
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
 </script>
 
 <style>

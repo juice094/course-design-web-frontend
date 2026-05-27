@@ -1,86 +1,20 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { portalRoutes } from './portal'
+import { adminRoutes } from './admin'
+
+const loginRoute: RouteRecordRaw = {
+  path: '/login',
+  name: 'Login',
+  component: () => import('@/views/LoginView.vue'),
+  meta: { public: true, title: '登录' }
+}
 
 const routes: RouteRecordRaw[] = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/LoginView.vue'),
-    meta: { public: true, title: '登录' }
-  },
-  {
-    path: '/portal',
-    component: () => import('@/layouts/PortalLayout.vue'),
-    meta: { public: true, title: '个人主页' },
-    children: [
-      { path: '', name: 'PortalHome', component: () => import('@/views/portal/HomeView.vue'), meta: { title: '首页' } },
-      { path: 'academic', name: 'PortalAcademic', component: () => import('@/views/portal/AcademicView.vue'), meta: { title: '学业中心' } },
-      { path: 'works', name: 'PortalWorks', component: () => import('@/views/portal/WorksView.vue'), meta: { title: '作品集' } },
-      { path: 'space', name: 'PortalSpace', component: () => import('@/views/portal/SpaceView.vue'), meta: { title: '个人空间' } },
-      { path: 'about', name: 'PortalAbout', component: () => import('@/views/portal/AboutView.vue'), meta: { title: '关于' } },
-    ]
-  },
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('@/views/HomeView.vue'),
-    meta: { title: '首页概览', icon: 'HomeFilled', menu: 'Home' }
-  },
-  {
-    path: '/student',
-    name: 'Student',
-    component: () => import('@/views/StudentView.vue'),
-    meta: { title: '学生管理', icon: 'UserFilled', menu: 'Student' }
-  },
-  {
-    path: '/teacher',
-    name: 'Teacher',
-    component: () => import('@/views/TeacherView.vue'),
-    meta: { title: '教师管理', icon: 'UserFilled', menu: 'Teacher' }
-  },
-  {
-    path: '/course',
-    name: 'Course',
-    component: () => import('@/views/CourseView.vue'),
-    meta: { title: '课程管理', icon: 'Reading', menu: 'Course' }
-  },
-  {
-    path: '/score',
-    name: 'Score',
-    component: () => import('@/views/ScoreView.vue'),
-    meta: { title: '成绩管理', icon: 'TrendCharts', menu: 'Score' }
-  },
-  {
-    path: '/course-select',
-    name: 'CourseSelect',
-    component: () => import('@/views/CourseSelectView.vue'),
-    meta: { title: '学生选课', icon: 'Plus', menu: 'CourseSelect' }
-  },
-  {
-    path: '/schedule',
-    name: 'Schedule',
-    component: () => import('@/views/ScheduleView.vue'),
-    meta: { title: '排课管理', icon: 'Calendar', menu: 'Schedule' }
-  },
-  {
-    path: '/evaluation',
-    name: 'Evaluation',
-    component: () => import('@/views/EvaluationView.vue'),
-    meta: { title: '评教结果', icon: 'Star', menu: 'Evaluation' }
-  },
-  {
-    path: '/operation-log',
-    name: 'OperationLog',
-    component: () => import('@/views/OperationLogView.vue'),
-    meta: { title: '操作日志', icon: 'Document', menu: 'OperationLog' }
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('@/views/AboutView.vue'),
-    meta: { title: '关于系统', icon: 'InfoFilled', menu: 'About' }
-  }
+  loginRoute,
+  ...portalRoutes,
+  ...adminRoutes,
 ]
 
 const router = createRouter({

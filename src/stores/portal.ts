@@ -1,13 +1,32 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import defaultBg from '@/assets/portal-bg.jpg'
-import type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig } from '@/types/portal'
-export type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig } from '@/types/portal'
+import { schoolInfo } from '@/data/profile'
+import type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
+export type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
 
 const STORAGE_KEY = 'portal-config-v1'
 
 // Vite 处理后的默认背景图 URL，开发和生产环境路径自动正确
 const DEFAULT_IMAGE_URL = defaultBg
+
+const defaultIdentityCardLinks: IdentityCardLinksConfig = {
+  student: {
+    internalUrl: '/#/login',
+    externalUrl: schoolInfo.website,
+    customUrl: '',
+  },
+  teacher: {
+    internalUrl: '/#/login',
+    externalUrl: schoolInfo.website,
+    customUrl: '',
+  },
+  developer: {
+    internalUrl: '/#/login',
+    externalUrl: schoolInfo.website,
+    customUrl: '',
+  },
+}
 
 const defaultConfig: PortalConfig = {
   background: {
@@ -36,6 +55,7 @@ const defaultConfig: PortalConfig = {
     { id: 'siteDashboard', name: '底部状态栏', enabled: true, order: 13 },
   ],
   customCards: [],
+  identityCardLinks: defaultIdentityCardLinks,
 }
 
 function mergeSections(saved: SectionConfig[] | undefined): SectionConfig[] {
@@ -67,6 +87,10 @@ function loadConfig(): PortalConfig {
         background: mergedBg,
         sections: mergeSections(parsed.sections),
         customCards: parsed.customCards ?? defaultConfig.customCards,
+        identityCardLinks: {
+          ...defaultIdentityCardLinks,
+          ...parsed.identityCardLinks,
+        },
       }
     }
   } catch {
@@ -169,6 +193,20 @@ export const usePortalStore = defineStore('portal', () => {
     }
   }
 
+  function updateIdentityCardLink(
+    card: keyof IdentityCardLinksConfig,
+    field: keyof IdentityCardLink,
+    value: string,
+  ) {
+    config.value.identityCardLinks[card][field] = value
+    saveConfig(config.value)
+  }
+
+  function resetIdentityCardLinks() {
+    config.value.identityCardLinks = JSON.parse(JSON.stringify(defaultIdentityCardLinks))
+    saveConfig(config.value)
+  }
+
   function resetConfig() {
     config.value = JSON.parse(JSON.stringify(defaultConfig))
     saveConfig(config.value)
@@ -193,6 +231,8 @@ export const usePortalStore = defineStore('portal', () => {
     addCustomCard,
     removeCustomCard,
     updateCustomCard,
+    updateIdentityCardLink,
+    resetIdentityCardLinks,
     resetConfig,
     openSettings,
     closeSettings,

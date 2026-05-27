@@ -39,7 +39,9 @@ export interface PortalConfig {
   customCards: CustomCard[]
 }
 
-const DEFAULT_IMAGE_URL = 'https://shared.steamstatic.com/community_assets/images/items/615530/e3f9ec8b350bdceda3aa4d617eb78c404c915129.jpg'
+// 默认背景图路径：public/portal-bg.jpg，通过相对路径引用
+// 用户可把任意图片放入 public/ 目录并在设置面板切换
+const DEFAULT_IMAGE_URL = './portal-bg.jpg'
 
 const defaultConfig: PortalConfig = {
   background: {

@@ -15,6 +15,21 @@
         </div>
 
         <div class="settings-body">
+          <!-- Tab 导航 -->
+          <div class="settings-tabs">
+            <button
+              v-for="tab in tabs"
+              :key="tab.id"
+              class="tab-btn"
+              :class="{ active: activeTab === tab.id }"
+              @click="activeTab = tab.id"
+            >
+              {{ tab.label }}
+            </button>
+          </div>
+
+          <!-- 外观 Tab -->
+          <template v-if="activeTab === 'appearance'">
           <!-- 背景设置 -->
           <section class="setting-group">
             <h4 class="group-title">背景</h4>
@@ -214,6 +229,57 @@
               重置所有设置
             </button>
           </section>
+          </template>
+
+          <!-- 课程表 Tab -->
+          <template v-if="activeTab === 'schedule'">
+            <section class="setting-group">
+              <h4 class="group-title">课程表管理</h4>
+              <div class="group-content">
+                <SettingsScheduleEditor />
+              </div>
+            </section>
+          </template>
+
+          <!-- 文章 Tab -->
+          <template v-if="activeTab === 'articles'">
+            <section class="setting-group">
+              <h4 class="group-title">文章管理</h4>
+              <div class="group-content">
+                <SettingsArticleEditor />
+              </div>
+            </section>
+          </template>
+
+          <!-- 照片 Tab -->
+          <template v-if="activeTab === 'photos'">
+            <section class="setting-group">
+              <h4 class="group-title">照片管理</h4>
+              <div class="group-content">
+                <SettingsPhotoEditor />
+              </div>
+            </section>
+          </template>
+
+          <!-- 动态 Tab -->
+          <template v-if="activeTab === 'moments'">
+            <section class="setting-group">
+              <h4 class="group-title">动态管理</h4>
+              <div class="group-content">
+                <SettingsMomentEditor />
+              </div>
+            </section>
+          </template>
+
+          <!-- 成就 Tab -->
+          <template v-if="activeTab === 'achievements'">
+            <section class="setting-group">
+              <h4 class="group-title">成就管理</h4>
+              <div class="group-content">
+                <SettingsAchievementEditor />
+              </div>
+            </section>
+          </template>
         </div>
       </div>
     </transition>
@@ -224,9 +290,24 @@
 import { ref, computed } from 'vue'
 import { usePortalStore, getCardColorClasses } from '@/stores/portal'
 import type { CardColor } from '@/stores/portal'
+import SettingsScheduleEditor from './SettingsScheduleEditor.vue'
+import SettingsArticleEditor from './SettingsArticleEditor.vue'
+import SettingsPhotoEditor from './SettingsPhotoEditor.vue'
+import SettingsMomentEditor from './SettingsMomentEditor.vue'
+import SettingsAchievementEditor from './SettingsAchievementEditor.vue'
 
 const portalStore = usePortalStore()
 const bg = computed(() => portalStore.config.background)
+
+const activeTab = ref('appearance')
+const tabs = [
+  { id: 'appearance', label: '外观' },
+  { id: 'schedule', label: '课程表' },
+  { id: 'articles', label: '文章' },
+  { id: 'photos', label: '照片' },
+  { id: 'moments', label: '动态' },
+  { id: 'achievements', label: '成就' },
+]
 
 const sortedSections = computed(() =>
   [...portalStore.config.sections].sort((a, b) => a.order - b.order),
@@ -353,7 +434,49 @@ function submitCard() {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.settings-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: #64748b;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.dark .tab-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.tab-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+.tab-btn.active {
+  background: #6366f1;
+  color: #fff;
+}
+
+.dark .tab-btn.active {
+  background: #4f46e5;
 }
 
 .setting-group {

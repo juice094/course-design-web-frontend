@@ -1,11 +1,24 @@
 <template>
   <nav class="portal-nav">
     <div class="nav-inner">
-      <div class="brand">
+      <div class="brand" role="button" tabindex="0" @click="onBrandClick">
         <span class="brand-name">GSAU</span>
         <span class="brand-divider">·</span>
         <span class="brand-desc">教务数据可视化系统</span>
       </div>
+
+      <!-- 导航菜单 -->
+      <nav class="nav-menu">
+        <router-link
+          v-for="item in navItems"
+          :key="item.path"
+          :to="item.path"
+          class="nav-link"
+          active-class="active"
+        >
+          {{ item.label }}
+        </router-link>
+      </nav>
 
       <div class="actions">
         <button
@@ -55,10 +68,10 @@
         </button>
 
         <router-link
-          to="/login"
+          :to="userStore.isLoggedIn ? '/' : '/login'"
           class="enter-btn"
         >
-          进入系统
+          {{ userStore.isLoggedIn ? '教务系统' : '进入系统' }}
         </router-link>
       </div>
     </div>
@@ -66,11 +79,32 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
 import { usePortalStore } from '@/stores/portal'
+import { useUserStore } from '@/stores/user'
+import { schoolInfo } from '@/data/profile'
 
+const router = useRouter()
 const themeStore = useThemeStore()
 const portalStore = usePortalStore()
+const userStore = useUserStore()
+
+const navItems = [
+  { path: '/portal', label: '首页' },
+  { path: '/portal/academic', label: '学业' },
+  { path: '/portal/works', label: '作品' },
+  { path: '/portal/space', label: '空间' },
+  { path: '/portal/about', label: '关于' },
+]
+
+function onBrandClick() {
+  if (userStore.isLoggedIn) {
+    router.push('/')
+  } else {
+    window.open(schoolInfo.website, '_blank', 'noopener,noreferrer')
+  }
+}
 </script>
 
 <style scoped>
@@ -100,6 +134,51 @@ const portalStore = usePortalStore()
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-menu {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .nav-menu { display: flex; }
+}
+
+.nav-link {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  text-decoration: none;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.dark .nav-link { color: #94a3b8; }
+
+.nav-link:hover {
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.dark .nav-link:hover {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.nav-link.active {
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.dark .nav-link.active {
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.2);
 }
 
 @media (min-width: 640px) {
@@ -114,6 +193,8 @@ const portalStore = usePortalStore()
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  cursor: pointer;
+  user-select: none;
 }
 
 .brand-name {

@@ -57,14 +57,34 @@ const defaultConfig: PortalConfig = {
     { id: 'profileCard', name: '个人名片', enabled: true, order: 0 },
     { id: 'schoolStats', name: '学校统计', enabled: true, order: 1 },
     { id: 'schoolLinks', name: '快速链接', enabled: true, order: 2 },
-    { id: 'identityCards', name: '身份卡片', enabled: true, order: 3 },
-    { id: 'projectShowcase', name: '项目展示', enabled: true, order: 4 },
-    { id: 'steamHub', name: '游戏时光', enabled: true, order: 5 },
-    { id: 'skillsRadar', name: '技能雷达', enabled: true, order: 6 },
-    { id: 'customCards', name: '自定义卡片', enabled: true, order: 7 },
-    { id: 'siteDashboard', name: '底部状态栏', enabled: true, order: 8 },
+    { id: 'courseSchedule', name: '课程表', enabled: true, order: 3 },
+    { id: 'identityCards', name: '身份卡片', enabled: true, order: 4 },
+    { id: 'articlesSection', name: '文章展示', enabled: true, order: 5 },
+    { id: 'achievementsTimeline', name: '获奖成就', enabled: true, order: 6 },
+    { id: 'projectShowcase', name: '项目展示', enabled: true, order: 7 },
+    { id: 'steamHub', name: '游戏时光', enabled: true, order: 8 },
+    { id: 'skillsRadar', name: '技能雷达', enabled: true, order: 9 },
+    { id: 'momentsFeed', name: '动态说说', enabled: true, order: 10 },
+    { id: 'photoWall', name: '照片墙', enabled: true, order: 11 },
+    { id: 'customCards', name: '自定义卡片', enabled: true, order: 12 },
+    { id: 'siteDashboard', name: '底部状态栏', enabled: true, order: 13 },
   ],
   customCards: [],
+}
+
+function mergeSections(saved: SectionConfig[] | undefined): SectionConfig[] {
+  const base = JSON.parse(JSON.stringify(defaultConfig.sections)) as SectionConfig[]
+  if (!saved) return base
+
+  // 保留用户已有的 section 配置（enabled / order）
+  const merged = base.map((section) => {
+    const existing = saved.find((s) => s.id === section.id)
+    return existing ? { ...section, enabled: existing.enabled, order: existing.order } : section
+  })
+
+  // 追加用户自定义的 section（如有）
+  const customSections = saved.filter((s) => !base.find((b) => b.id === s.id))
+  return [...merged, ...customSections]
 }
 
 function loadConfig(): PortalConfig {
@@ -79,7 +99,7 @@ function loadConfig(): PortalConfig {
       }
       return {
         background: mergedBg,
-        sections: parsed.sections ?? defaultConfig.sections,
+        sections: mergeSections(parsed.sections),
         customCards: parsed.customCards ?? defaultConfig.customCards,
       }
     }

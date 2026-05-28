@@ -1,0 +1,472 @@
+<!-- ============================================ -->
+<!-- 个人主页卡片组件 - 名师风采/教师个人主页      -->
+<!-- 工程标准化 - 2026-05-28                      --
+<!-- 设计: 格雷                                   --
+<!-- 用途: 等组员新主页 PR 后融合，或独立使用      --
+<!-- ============================================ -->
+
+<!-- 依赖: 需引入主样式表 css/style.css 或内嵌以下样式 -->
+
+<style>
+/* ===== 个人主页卡片区域 ===== */
+.profile-section {
+    padding: 60px 0;
+    background: var(--bg-light, #f8f9fa);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 单个卡片 */
+.profile-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+/* 卡片头部 - 头像+基本信息 */
+.profile-header {
+    padding: 25px 25px 15px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color, #1a5f2a), var(--primary-light, #2d8a3e));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    flex-shrink: 0;
+    border: 3px solid rgba(26, 95, 42, 0.1);
+}
+
+.profile-basic {
+    flex: 1;
+    min-width: 0; /* 防止 flex 子项溢出 */
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark, #333);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-title {
+    font-size: 13px;
+    color: var(--primary-color, #1a5f2a);
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.profile-dept {
+    font-size: 12px;
+    color: var(--text-light, #666);
+}
+
+/* 分隔线 */
+.profile-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+    margin: 0 25px;
+}
+
+/* 卡片主体 - 研究方向/课程 */
+.profile-body {
+    padding: 15px 25px;
+    flex: 1;
+}
+
+.profile-field {
+    font-size: 14px;
+    color: var(--text-dark, #333);
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.profile-field-label {
+    color: var(--text-light, #666);
+    font-size: 12px;
+}
+
+.profile-courses {
+    font-size: 13px;
+    color: var(--text-light, #666);
+    line-height: 1.5;
+}
+
+/* 数据指标条 */
+.profile-stats {
+    display: flex;
+    gap: 0;
+    padding: 0 25px 20px;
+}
+
+.profile-stat {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    border-right: 1px solid #f0f0f0;
+}
+
+.profile-stat:last-child {
+    border-right: none;
+}
+
+.profile-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color, #1a5f2a);
+    display: block;
+    line-height: 1;
+}
+
+.profile-stat-label {
+    font-size: 11px;
+    color: var(--text-light, #666);
+    margin-top: 4px;
+}
+
+/* 底部操作 */
+.profile-footer {
+    padding: 0 25px 25px;
+}
+
+.profile-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color, #1a5f2a);
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-btn:hover {
+    background: var(--primary-dark, #0d3d16);
+}
+
+/* ===== 列表视图变体（用于详细页面）===== */
+.profile-list-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.profile-list-item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.profile-list-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1a5f2a, #2d8a3e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.profile-list-content {
+    flex: 1;
+}
+
+.profile-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.profile-list-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #666;
+}
+
+.profile-list-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .profile-card {
+        border-radius: 12px;
+    }
+
+    .profile-header {
+        padding: 20px 20px 12px;
+        gap: 14px;
+    }
+
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 22px;
+    }
+
+    .profile-name {
+        font-size: 16px;
+    }
+
+    .profile-body,
+    .profile-stats,
+    .profile-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .profile-list-item {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .profile-list-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+}
+</style>
+
+<!-- ============================================ -->
+<!-- 使用示例 1: 网格卡片（用于"名师风采"首页）    --
+<!-- ============================================ -->
+
+<section class="profile-section">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div class="section-header" style="margin-bottom: 40px;">
+            <h2 style="font-size: 28px; color: #1a5f2a;">名师风采</h2>
+            <p style="color: #666; margin-top: 8px;">甘肃农业大学优秀教师代表</p>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+
+        <!-- 卡片 1 -->
+        <article class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">张</div>
+                <div class="profile-basic">
+                    <div class="profile-name">张三 教授</div>
+                    <div class="profile-title">博士生导师 · 学科带头人</div>
+                    <div class="profile-dept">农学院 · 作物遗传育种系</div>
+                </div>
+            </div>
+            <div class="profile-divider"></div>
+            <div class="profile-body">
+                <p class="profile-field">
+                    <span class="profile-field-label">研究方向：</span>
+                    小麦抗旱遗传改良、作物分子育种
+                </p>
+                <p class="profile-courses">
+                    <span class="profile-field-label">主讲课程：</span>
+                    《遗传学》《分子生物学》《作物育种学》
+                </p>
+            </div>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="profile-stat-value">128</span>
+                    <span class="profile-stat-label">发表论文</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-value">15</span>
+                    <span class="profile-stat-label">科研项目</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-value">32</span>
+                    <span class="profile-stat-label">指导学生</span>
+                </div>
+            </div>
+            <div class="profile-footer">
+                <a href="pages/teacher-zhang.html" class="profile-btn">查看个人主页 →</a>
+            </div>
+        </article>
+
+        <!-- 卡片 2 -->
+        <article class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" style="background: linear-gradient(135deg, #c9a227, #e0b52f);">李</div>
+                <div class="profile-basic">
+                    <div class="profile-name">李四 副教授</div>
+                    <div class="profile-title">硕士生导师 · 青年拔尖人才</div>
+                    <div class="profile-dept">动物医学院 · 临床兽医学系</div>
+                </div>
+            </div>
+            <div class="profile-divider"></div>
+            <div class="profile-body">
+                <p class="profile-field">
+                    <span class="profile-field-label">研究方向：</span>
+                    动物疫病防控、中兽药研发
+                </p>
+                <p class="profile-courses">
+                    <span class="profile-field-label">主讲课程：</span>
+                    《兽医内科学》《中兽医学》《动物传染病学》
+                </p>
+            </div>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="profile-stat-value">56</span>
+                    <span class="profile-stat-label">发表论文</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-value">8</span>
+                    <span class="profile-stat-label">科研项目</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-value">18</span>
+                    <span class="profile-stat-label">指导学生</span>
+                </div>
+            </div>
+            <div class="profile-footer">
+                <a href="pages/teacher-li.html" class="profile-btn">查看个人主页 →</a>
+            </div>
+        </article>
+
+        <!-- 卡片 3 -->
+        <article class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" style="background: linear-gradient(135deg, #2d5a7b, #4a8ab9);">王</div>
+                <div class="profile-basic">
+                    <div class="profile-name">王五 教授</div>
+                    <div class="profile-title">博士生导师 · 国家杰出青年</div>
+                    <div class="profile-dept">草业学院 · 草地生态系</div>
+                </div>
+            </div>
+            <div class="profile-divider"></div>
+            <div class="profile-body">
+                <p class="profile-field">
+                    <span class="profile-field-label">研究方向：</span>
+                    草地生态学、草地恢复与重建
+                </p>
+                <p class="profile-courses">
+                    <span class="profile-field-label">主讲课程：</span>
+                    《草地生态学》《草原管理学》《草地保护学》
+                </p>
+            </div>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="profile-stat-value">215</span>
+                    <span class="profile-stat-label">发表论文</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-value">23</span>
+                    <span class="profile-stat-label">科研项目</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="profile-stat-value">45</span>
+                    <span class="profile-stat-label">指导学生</span>
+                </div>
+            </div>
+            <div class="profile-footer">
+                <a href="pages/teacher-wang.html" class="profile-btn">查看个人主页 →</a>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<!-- ============================================ --
+<!-- 使用示例 2: 列表视图（用于"教师名录"详细页）   --
+<!-- ============================================ --
+
+<section class="profile-section" style="background: #fff;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div class="section-header" style="margin-bottom: 30px;">
+            <h2 style="font-size: 28px; color: #1a5f2a;">教师名录</h2>
+        </div>
+
+        <!-- 列表项 1 -->
+        <article class="profile-list-item">
+            <div class="profile-list-avatar">张</div>
+            <div class="profile-list-content">
+                <div class="profile-list-header">
+                    <div>
+                        <div class="profile-name">张三 教授</div>
+                        <div class="profile-title">博士生导师 · 学科带头人 · 农学院</div>
+                    </div>
+                    <a href="pages/teacher-zhang.html" class="profile-btn" style="width: auto; padding: 8px 20px;">查看主页</a>
+                </div>
+                <div class="profile-list-meta">
+                    <span>📄 论文 128 篇</span>
+                    <span>🔬 项目 15 项</span>
+                    <span>🎓 指导学生 32 人</span>
+                    <span>📧 zhangsan@gsau.edu.cn</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- 列表项 2 -->
+        <article class="profile-list-item">
+            <div class="profile-list-avatar" style="background: linear-gradient(135deg, #c9a227, #e0b52f);">李</div>
+            <div class="profile-list-content">
+                <div class="profile-list-header">
+                    <div>
+                        <div class="profile-name">李四 副教授</div>
+                        <div class="profile-title">硕士生导师 · 青年拔尖人才 · 动物医学院</div>
+                    </div>
+                    <a href="pages/teacher-li.html" class="profile-btn" style="width: auto; padding: 8px 20px;">查看主页</a>
+                </div>
+                <div class="profile-list-meta">
+                    <span>📄 论文 56 篇</span>
+                    <span>🔬 项目 8 项</span>
+                    <span>🎓 指导学生 18 人</span>
+                    <span>📧 lisi@gsau.edu.cn</span>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+-->

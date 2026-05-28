@@ -8,9 +8,7 @@
         <div class="settings-header">
           <h3 class="settings-title">页面设置</h3>
           <button class="close-btn" @click="portalStore.closeSettings">
-            <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X class="icon" :size="16" />
           </button>
         </div>
 
@@ -415,6 +413,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { X } from 'lucide-vue-next'
 import { usePortalStore, getCardColorClasses } from '@/stores/portal'
 import { useThemeStore } from '@/stores/theme'
 import type { CardColor, SectionSize } from '@/stores/portal'

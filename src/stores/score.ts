@@ -1,8 +1,8 @@
 ﻿import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import type { Score, ScoreWeight } from '@/types/score'
 import { DEFAULT_WEIGHT } from '@/types/score'
-import { persist, restore } from '@/vendor/vue-utils'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 const PERSIST_KEY = 'scores'
 
@@ -36,46 +36,53 @@ const mockScores: Score[] = [
   { id: 5, studentId: 2023001, studentName: '赵雪', studentNo: '2023001', courseId: 1, courseName: '计算机导论', semester: '2024-2025-1', usualScore: 60, midtermScore: 55, finalScore: 58, totalScore: 57.5, gpa: 0, status: 'normal' }
 ]
 
+const persistPlugin = createPersistPlugin<Score[]>({
+  key: PERSIST_KEY,
+  fallback: () => mockScores,
+})
+
 export const useScoreStore = defineStore('score', () => {
-  const scores = ref<Score[]>([])
-  const weight = ref<ScoreWeight>({ ...DEFAULT_WEIGHT })
+  const _scores = ref<Score[]>([])
+  const scores = readonly(_scores)
+  const _weight = ref<ScoreWeight>({ ...DEFAULT_WEIGHT })
+  const weight = readonly(_weight)
 
   function loadScores() {
-    if (scores.value.length === 0) {
-      const restored = restore<Score[]>(PERSIST_KEY, mockScores)
-      scores.value = restored.map((s) => enrichScore(s, weight.value))
+    if (_scores.value.length === 0) {
+      const restored = persistPlugin.load()
+      _scores.value = restored.map((s) => enrichScore(s, _weight.value))
     }
   }
 
   function recalcAll() {
-    scores.value = scores.value.map((s) => enrichScore(s, weight.value))
-    persist(PERSIST_KEY, scores.value)
+    _scores.value = _scores.value.map((s) => enrichScore(s, _weight.value))
+    persistPlugin.save(_scores.value)
   }
 
   function addScore(s: Score) {
-    scores.value.push(enrichScore(s, weight.value))
-    persist(PERSIST_KEY, scores.value)
+    _scores.value.push(enrichScore(s, _weight.value))
+    persistPlugin.save(_scores.value)
   }
 
   function updateScore(s: Score) {
-    const idx = scores.value.findIndex((item) => item.id === s.id)
+    const idx = _scores.value.findIndex((item) => item.id === s.id)
     if (idx !== -1) {
-      scores.value[idx] = enrichScore(s, weight.value)
-      persist(PERSIST_KEY, scores.value)
+      _scores.value[idx] = enrichScore(s, _weight.value)
+      persistPlugin.save(_scores.value)
     }
   }
 
   function deleteScore(id: number) {
-    const idx = scores.value.findIndex((item) => item.id === id)
+    const idx = _scores.value.findIndex((item) => item.id === id)
     if (idx !== -1) {
-      scores.value.splice(idx, 1)
-      persist(PERSIST_KEY, scores.value)
+      _scores.value.splice(idx, 1)
+      persistPlugin.save(_scores.value)
     }
   }
 
   // 统计
   const stats = computed(() => {
-    const totals = scores.value.map((s) => s.totalScore)
+    const totals = _scores.value.map((s) => s.totalScore)
     const count = totals.length
     if (count === 0) return { avg: 0, max: 0, min: 0, passRate: 0 }
     const avg = Number((totals.reduce((a, b) => a + b, 0) / count).toFixed(1))
@@ -87,11 +94,11 @@ export const useScoreStore = defineStore('score', () => {
   })
 
   function getScoresByCourse(courseId: number): Score[] {
-    return scores.value.filter((s) => s.courseId === courseId)
+    return _scores.value.filter((s) => s.courseId === courseId)
   }
 
   function getScoresByStudent(studentId: number): Score[] {
-    return scores.value.filter((s) => s.studentId === studentId)
+    return _scores.value.filter((s) => s.studentId === studentId)
   }
 
   return {

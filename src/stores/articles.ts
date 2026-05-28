@@ -1,5 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { defineStore } from 'pinia'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 import type { Article, ArticleCategory } from '@/types/content'
 export type { Article, ArticleCategory } from '@/types/content'
@@ -31,27 +32,20 @@ const demoArticles: Article[] = [
   },
 ]
 
-function loadArticles(): Article[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw) as Article[]
-  } catch {
-    // ignore
-  }
-  return JSON.parse(JSON.stringify(demoArticles))
-}
-
-function saveArticles(articles: Article[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(articles))
-}
+const persistPlugin = createPersistPlugin<Article[]>({
+  key: STORAGE_KEY,
+  fallback: () => JSON.parse(JSON.stringify(demoArticles)),
+})
 
 export const useArticleStore = defineStore('articles', () => {
-  const articles = ref<Article[]>(loadArticles())
-  const activeCategory = ref<ArticleCategory | 'all'>('all')
+  const _articles = ref<Article[]>(persistPlugin.load())
+  const articles = readonly(_articles)
+  const _activeCategory = ref<ArticleCategory | 'all'>('all')
+  const activeCategory = readonly(_activeCategory)
 
   const filteredArticles = computed(() => {
-    if (activeCategory.value === 'all') return articles.value
-    return articles.value.filter(a => a.category === activeCategory.value)
+    if (_activeCategory.value === 'all') return _articles.value
+    return _articles.value.filter(a => a.category === _activeCategory.value)
   })
 
   const publishedArticles = computed(() =>
@@ -61,30 +55,30 @@ export const useArticleStore = defineStore('articles', () => {
   function addArticle(item: Omit<Article, 'id' | 'date'>) {
     const id = `article-${Date.now()}`
     const date = new Date().toISOString().split('T')[0]
-    articles.value.unshift({ ...item, id, date })
-    saveArticles(articles.value)
+    _articles.value.unshift({ ...item, id, date })
+    persistPlugin.save(_articles.value)
   }
 
   function removeArticle(id: string) {
-    articles.value = articles.value.filter(a => a.id !== id)
-    saveArticles(articles.value)
+    _articles.value = _articles.value.filter(a => a.id !== id)
+    persistPlugin.save(_articles.value)
   }
 
   function updateArticle(id: string, updates: Partial<Article>) {
-    const article = articles.value.find(a => a.id === id)
+    const article = _articles.value.find(a => a.id === id)
     if (article) {
       Object.assign(article, updates)
-      saveArticles(articles.value)
+      persistPlugin.save(_articles.value)
     }
   }
 
   function setCategory(cat: ArticleCategory | 'all') {
-    activeCategory.value = cat
+    _activeCategory.value = cat
   }
 
   function resetToDemo() {
-    articles.value = JSON.parse(JSON.stringify(demoArticles))
-    saveArticles(articles.value)
+    _articles.value = JSON.parse(JSON.stringify(demoArticles))
+    persistPlugin.save(_articles.value)
   }
 
   return {

@@ -1,7 +1,7 @@
 ﻿import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, readonly } from 'vue'
 import type { Teacher } from '@/types/teacher'
-import { persist, restore } from '@/vendor/vue-utils'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 const PERSIST_KEY = 'teachers'
 
@@ -13,33 +13,39 @@ const mockTeachers: Teacher[] = [
   { id: 5, teacherNo: 'T2021005', name: '陈老师', gender: '男', age: 50, title: '教授', collegeId: 1, collegeName: '信息工程学院', phone: '13800138005', email: 'chen@edu.cn', courses: ['软件工程', '数据库系统'] }
 ]
 
+const persistPlugin = createPersistPlugin<Teacher[]>({
+  key: PERSIST_KEY,
+  fallback: () => mockTeachers,
+})
+
 export const useTeacherStore = defineStore('teacher', () => {
-  const teachers = ref<Teacher[]>([])
+  const _teachers = ref<Teacher[]>([])
+  const teachers = readonly(_teachers)
 
   function loadTeachers() {
-    if (teachers.value.length === 0) {
-      teachers.value = restore<Teacher[]>(PERSIST_KEY, mockTeachers)
+    if (_teachers.value.length === 0) {
+      _teachers.value = persistPlugin.load()
     }
   }
 
   function addTeacher(t: Teacher) {
-    teachers.value.push(t)
-    persist(PERSIST_KEY, teachers.value)
+    _teachers.value.push(t)
+    persistPlugin.save(_teachers.value)
   }
 
   function updateTeacher(t: Teacher) {
-    const idx = teachers.value.findIndex((item) => item.id === t.id)
+    const idx = _teachers.value.findIndex((item) => item.id === t.id)
     if (idx !== -1) {
-      teachers.value[idx] = t
-      persist(PERSIST_KEY, teachers.value)
+      _teachers.value[idx] = t
+      persistPlugin.save(_teachers.value)
     }
   }
 
   function deleteTeacher(id: number) {
-    const idx = teachers.value.findIndex((item) => item.id === id)
+    const idx = _teachers.value.findIndex((item) => item.id === id)
     if (idx !== -1) {
-      teachers.value.splice(idx, 1)
-      persist(PERSIST_KEY, teachers.value)
+      _teachers.value.splice(idx, 1)
+      persistPlugin.save(_teachers.value)
     }
   }
 

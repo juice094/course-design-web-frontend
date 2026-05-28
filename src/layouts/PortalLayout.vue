@@ -5,12 +5,15 @@
     <PortalSettings />
 
     <main class="portal-main">
-      <div
-        class="scale-wrapper"
-        :style="scaleStyle"
-      >
-        <div class="portal-content">
-          <router-view />
+      <div class="scale-outer" :style="outerStyle">
+        <div
+          ref="scaleWrapperRef"
+          class="scale-wrapper"
+          :style="scaleStyle"
+        >
+          <div class="portal-content">
+            <router-view />
+          </div>
         </div>
       </div>
     </main>
@@ -29,6 +32,8 @@ const themeStore = useThemeStore()
 // 卡片区域自适应缩放 —— 导航栏保持原大小
 const BASE_WIDTH = 1440  // 设计稿基准宽度
 const windowWidth = ref(window.innerWidth)
+const scaleWrapperRef = ref<HTMLElement | null>(null)
+const rawContentHeight = ref(0)
 
 const scaleRatio = computed(() => {
   // 只缩小的场景：窗口小于基准宽度时等比缩放，大于等于基准时保持 1
@@ -40,13 +45,23 @@ const scaleRatio = computed(() => {
 const scaleStyle = computed(() => {
   const s = scaleRatio.value
   if (s >= 1) return {}
+  // 绝对定位脱离文档流，避免 transform scale 产生多余占位；
+  // 外层容器通过 JS 计算视觉高度来占位。
   return {
-    transform: `scale(${s})`,
+    position: 'absolute',
+    top: '0',
+    left: '50%',
+    transform: `translateX(-50%) scale(${s})`,
     transformOrigin: 'top center',
     width: `${BASE_WIDTH}px`,
-    maxWidth: `${BASE_WIDTH}px`,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+  }
+})
+
+const outerStyle = computed(() => {
+  const s = scaleRatio.value
+  if (s >= 1) return {}
+  return {
+    height: `${rawContentHeight.value * s}px`,
   }
 })
 
@@ -54,12 +69,26 @@ function onResize() {
   windowWidth.value = window.innerWidth
 }
 
+let ro: ResizeObserver | null = null
+
 onMounted(() => {
   window.addEventListener('resize', onResize)
+
+  const el = scaleWrapperRef.value
+  if (el) {
+    rawContentHeight.value = el.getBoundingClientRect().height
+    ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        rawContentHeight.value = entry.contentRect.height
+      }
+    })
+    ro.observe(el)
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', onResize)
+  ro?.disconnect()
 })
 </script>
 
@@ -79,6 +108,12 @@ onUnmounted(() => {
   position: relative;
   z-index: 10;
   overflow: visible; /* 允许缩放后的内容溢出 */
+}
+
+.scale-outer {
+  position: relative;
+  transition: height 0.3s ease;
+  will-change: height;
 }
 
 .scale-wrapper {
@@ -102,7 +137,7 @@ onUnmounted(() => {
   .scale-wrapper {
     transform: none !important;
     width: auto !important;
-    max-width: 72rem;
+    max-width: 1440px;
     margin-left: auto;
     margin-right: auto;
   }

@@ -17,13 +17,16 @@ export function formatDate(date: Date | string | number, fmt = 'yyyy-MM-dd'): st
     'm+': d.getMinutes(),
     's+': d.getSeconds()
   }
-  if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(RegExp.$1, String(d.getFullYear()).slice(4 - RegExp.$1.length))
+  // SAFETY: 使用显式正则捕获替代废弃的 RegExp.$1
+  const yearMatch = fmt.match(/(y+)/)
+  if (yearMatch) {
+    fmt = fmt.replace(yearMatch[0], String(d.getFullYear()).slice(4 - yearMatch[0].length))
   }
-  for (const k in o) {
-    if (new RegExp(`(${k})`).test(fmt)) {
-      const v = o[k] < 10 ? `0${o[k]}` : o[k]
-      fmt = fmt.replace(RegExp.$1, String(v).slice(0, RegExp.$1.length))
+  for (const [k, v] of Object.entries(o)) {
+    const match = fmt.match(new RegExp(`(${k})`))
+    if (match) {
+      const padded = v < 10 ? `0${v}` : v
+      fmt = fmt.replace(match[0], String(padded).slice(0, match[0].length))
     }
   }
   return fmt

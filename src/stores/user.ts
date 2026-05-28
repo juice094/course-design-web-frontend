@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import type { UserInfo, UserRole, LoginForm } from '@/types/user'
 import { getToken, setToken, getUserInfo, setUserInfo, clearAuth } from '@/utils/auth'
 import { hasMenu, hasButton } from '@/utils/permission'
@@ -21,11 +21,13 @@ const MOCK_USERS: Record<string, { password: string; info: UserInfo }> = {
 }
 
 export const useUserStore = defineStore('user', () => {
-  const token = ref<string | null>(getToken())
-  const userInfo = ref<UserInfo | null>(getUserInfo())
+  const _token = ref<string | null>(getToken())
+  const token = readonly(_token)
+  const _userInfo = ref<UserInfo | null>(getUserInfo())
+  const userInfo = readonly(_userInfo)
 
-  const isLoggedIn = computed(() => !!token.value && !!userInfo.value)
-  const role = computed(() => userInfo.value?.role ?? null)
+  const isLoggedIn = computed(() => !!_token.value && !!_userInfo.value)
+  const role = computed(() => _userInfo.value?.role ?? null)
   const isAdmin = computed(() => role.value === 'admin')
   const isTeacher = computed(() => role.value === 'teacher')
   const isStudent = computed(() => role.value === 'student')
@@ -37,8 +39,8 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const fakeToken = `mock-jwt-token-${Date.now()}`
-    token.value = fakeToken
-    userInfo.value = { ...mock.info }
+    _token.value = fakeToken
+    _userInfo.value = { ...mock.info }
 
     setToken(fakeToken)
     setUserInfo(mock.info)
@@ -46,8 +48,8 @@ export const useUserStore = defineStore('user', () => {
   }
 
   function logout(): void {
-    token.value = null
-    userInfo.value = null
+    _token.value = null
+    _userInfo.value = null
     clearAuth()
   }
 

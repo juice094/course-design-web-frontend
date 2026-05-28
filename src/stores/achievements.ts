@@ -1,5 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { defineStore } from 'pinia'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 import type { Achievement, AchievementLevel } from '@/types/content'
 export type { Achievement, AchievementLevel } from '@/types/content'
@@ -30,51 +31,43 @@ const demoAchievements: Achievement[] = [
   },
 ]
 
-function loadAchievements(): Achievement[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw) as Achievement[]
-  } catch {
-    // ignore
-  }
-  return JSON.parse(JSON.stringify(demoAchievements))
-}
-
-function saveAchievements(achievements: Achievement[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(achievements))
-}
+const persistPlugin = createPersistPlugin<Achievement[]>({
+  key: STORAGE_KEY,
+  fallback: () => JSON.parse(JSON.stringify(demoAchievements)),
+})
 
 export const useAchievementStore = defineStore('achievements', () => {
-  const achievements = ref<Achievement[]>(loadAchievements())
+  const _achievements = ref<Achievement[]>(persistPlugin.load())
+  const achievements = readonly(_achievements)
 
   const sortedAchievements = computed(() =>
-    [...achievements.value].sort(
+    [..._achievements.value].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
     ),
   )
 
   function addAchievement(item: Omit<Achievement, 'id'>) {
     const id = `achievement-${Date.now()}`
-    achievements.value.push({ ...item, id })
-    saveAchievements(achievements.value)
+    _achievements.value.push({ ...item, id })
+    persistPlugin.save(_achievements.value)
   }
 
   function removeAchievement(id: string) {
-    achievements.value = achievements.value.filter(a => a.id !== id)
-    saveAchievements(achievements.value)
+    _achievements.value = _achievements.value.filter(a => a.id !== id)
+    persistPlugin.save(_achievements.value)
   }
 
   function updateAchievement(id: string, updates: Partial<Achievement>) {
-    const achievement = achievements.value.find(a => a.id === id)
+    const achievement = _achievements.value.find(a => a.id === id)
     if (achievement) {
       Object.assign(achievement, updates)
-      saveAchievements(achievements.value)
+      persistPlugin.save(_achievements.value)
     }
   }
 
   function resetToDemo() {
-    achievements.value = JSON.parse(JSON.stringify(demoAchievements))
-    saveAchievements(achievements.value)
+    _achievements.value = JSON.parse(JSON.stringify(demoAchievements))
+    persistPlugin.save(_achievements.value)
   }
 
   return {

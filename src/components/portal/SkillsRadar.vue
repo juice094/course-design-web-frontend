@@ -2,19 +2,7 @@
   <div class="section">
     <div class="section-header">
       <div class="section-icon emerald-bg">
-        <svg
-          class="icon-svg emerald"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M13 10V3L4 14h7v7l9-11h-7z"
-          />
-        </svg>
+        <Zap class="icon-svg emerald" :size="16" />
       </div>
       <h2 class="section-title">
         技能雷达
@@ -32,6 +20,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
+import { Zap } from 'lucide-vue-next'
 import * as echarts from 'echarts/core'
 import { RadarChart } from 'echarts/charts'
 import { RadarComponent, TooltipComponent, LegendComponent } from 'echarts/components'

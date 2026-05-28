@@ -47,4 +47,5 @@ router.beforeEach((to) => {
   return true
 })
 
+export { router }
 export default router

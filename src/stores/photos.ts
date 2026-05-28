@@ -1,5 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { defineStore } from 'pinia'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 import type { Photo, PhotoCategory } from '@/types/content'
 export type { Photo, PhotoCategory } from '@/types/content'
@@ -33,56 +34,49 @@ const demoPhotos: Photo[] = [
   },
 ]
 
-function loadPhotos(): Photo[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw) as Photo[]
-  } catch {
-    // ignore
-  }
-  return JSON.parse(JSON.stringify(demoPhotos))
-}
-
-function savePhotos(photos: Photo[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(photos))
-}
+const persistPlugin = createPersistPlugin<Photo[]>({
+  key: STORAGE_KEY,
+  fallback: () => JSON.parse(JSON.stringify(demoPhotos)),
+})
 
 export const usePhotoStore = defineStore('photos', () => {
-  const photos = ref<Photo[]>(loadPhotos())
-  const activeCategory = ref<PhotoCategory | 'all'>('all')
+  const _photos = ref<Photo[]>(persistPlugin.load())
+  const photos = readonly(_photos)
+  const _activeCategory = ref<PhotoCategory | 'all'>('all')
+  const activeCategory = readonly(_activeCategory)
 
   const filteredPhotos = computed(() => {
-    if (activeCategory.value === 'all') return photos.value
-    return photos.value.filter(p => p.category === activeCategory.value)
+    if (_activeCategory.value === 'all') return _photos.value
+    return _photos.value.filter(p => p.category === _activeCategory.value)
   })
 
   function addPhoto(item: Omit<Photo, 'id' | 'date'>) {
     const id = `photo-${Date.now()}`
     const date = new Date().toISOString().split('T')[0]
-    photos.value.unshift({ ...item, id, date })
-    savePhotos(photos.value)
+    _photos.value.unshift({ ...item, id, date })
+    persistPlugin.save(_photos.value)
   }
 
   function removePhoto(id: string) {
-    photos.value = photos.value.filter(p => p.id !== id)
-    savePhotos(photos.value)
+    _photos.value = _photos.value.filter(p => p.id !== id)
+    persistPlugin.save(_photos.value)
   }
 
   function updatePhoto(id: string, updates: Partial<Photo>) {
-    const photo = photos.value.find(p => p.id === id)
+    const photo = _photos.value.find(p => p.id === id)
     if (photo) {
       Object.assign(photo, updates)
-      savePhotos(photos.value)
+      persistPlugin.save(_photos.value)
     }
   }
 
   function setCategory(cat: PhotoCategory | 'all') {
-    activeCategory.value = cat
+    _activeCategory.value = cat
   }
 
   function resetToDemo() {
-    photos.value = JSON.parse(JSON.stringify(demoPhotos))
-    savePhotos(photos.value)
+    _photos.value = JSON.parse(JSON.stringify(demoPhotos))
+    persistPlugin.save(_photos.value)
   }
 
   return {

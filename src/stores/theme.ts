@@ -1,29 +1,32 @@
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, readonly } from 'vue'
 import { defineStore } from 'pinia'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 const STORAGE_KEY = 'portal-theme'
 
-function loadTheme(): boolean {
-  const saved = localStorage.getItem(STORAGE_KEY)
-  return saved !== 'light'
-}
+const persistPlugin = createPersistPlugin<string>({
+  key: STORAGE_KEY,
+  fallback: () => 'dark',
+})
 
-function saveTheme(isDark: boolean): void {
-  localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light')
+function loadTheme(): boolean {
+  return persistPlugin.load() !== 'light'
 }
 
 export const useThemeStore = defineStore('theme', () => {
-  const isDark = ref(loadTheme())
-  const mounted = ref(false)
+  const _isDark = ref(loadTheme())
+  const isDark = readonly(_isDark)
+  const _mounted = ref(false)
+  const mounted = readonly(_mounted)
 
   onMounted(() => {
-    mounted.value = true
+    _mounted.value = true
   })
 
   function toggleTheme() {
-    const next = !isDark.value
-    isDark.value = next
-    saveTheme(next)
+    const next = !_isDark.value
+    _isDark.value = next
+    persistPlugin.save(next ? 'dark' : 'light')
   }
 
   return { isDark, mounted, toggleTheme }

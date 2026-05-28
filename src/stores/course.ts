@@ -1,7 +1,7 @@
 ﻿import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, readonly } from 'vue'
 import type { Course } from '@/types/course'
-import { persist, restore } from '@/vendor/vue-utils'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 const PERSIST_KEY = 'courses'
 
@@ -14,33 +14,39 @@ const mockCourses: Course[] = [
   { id: 6, courseNo: 'CS401', name: '人工智能导论', credit: 2, hours: 32, type: '选修', collegeId: 1, collegeName: '信息工程学院', teacherId: 5, teacherName: '陈老师', semester: '2024-2025-1', maxStudents: 200 }
 ]
 
+const persistPlugin = createPersistPlugin<Course[]>({
+  key: PERSIST_KEY,
+  fallback: () => mockCourses,
+})
+
 export const useCourseStore = defineStore('course', () => {
-  const courses = ref<Course[]>([])
+  const _courses = ref<Course[]>([])
+  const courses = readonly(_courses)
 
   function loadCourses() {
-    if (courses.value.length === 0) {
-      courses.value = restore<Course[]>(PERSIST_KEY, mockCourses)
+    if (_courses.value.length === 0) {
+      _courses.value = persistPlugin.load()
     }
   }
 
   function addCourse(c: Course) {
-    courses.value.push(c)
-    persist(PERSIST_KEY, courses.value)
+    _courses.value.push(c)
+    persistPlugin.save(_courses.value)
   }
 
   function updateCourse(c: Course) {
-    const idx = courses.value.findIndex((item) => item.id === c.id)
+    const idx = _courses.value.findIndex((item) => item.id === c.id)
     if (idx !== -1) {
-      courses.value[idx] = c
-      persist(PERSIST_KEY, courses.value)
+      _courses.value[idx] = c
+      persistPlugin.save(_courses.value)
     }
   }
 
   function deleteCourse(id: number) {
-    const idx = courses.value.findIndex((item) => item.id === id)
+    const idx = _courses.value.findIndex((item) => item.id === id)
     if (idx !== -1) {
-      courses.value.splice(idx, 1)
-      persist(PERSIST_KEY, courses.value)
+      _courses.value.splice(idx, 1)
+      persistPlugin.save(_courses.value)
     }
   }
 

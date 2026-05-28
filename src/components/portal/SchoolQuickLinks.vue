@@ -11,19 +11,11 @@
           class="ql-icon"
           :class="link.color"
         >
-          <svg
+          <component
+            :is="link.icon"
             class="ql-svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              :d="link.icon"
-            />
-          </svg>
+            :size="20"
+          />
         </div>
         <div class="ql-info">
           <h4 class="ql-name">
@@ -33,53 +25,43 @@
             {{ link.desc }}
           </p>
         </div>
-        <svg
-          class="ql-arrow"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <ChevronRight class="ql-arrow" :size="16" />
       </router-link>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { BookOpen, BarChart3, CalendarDays, Building2, ChevronRight } from 'lucide-vue-next'
+
 const links = [
   {
     name: '学生选课',
     desc: '浏览可选课程，一键选课退课',
     path: '/course-select',
     color: 'blue',
-    icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+    icon: BookOpen,
   },
   {
     name: '成绩查询',
     desc: '查看各科成绩与 GPA 统计',
     path: '/score',
     color: 'emerald',
-    icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+    icon: BarChart3,
   },
   {
     name: '课表查询',
     desc: '查看个人课程安排与教室',
     path: '/schedule',
     color: 'amber',
-    icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+    icon: CalendarDays,
   },
   {
     name: '办事大厅',
     desc: '常用教务服务一站式入口',
     path: '/',
     color: 'rose',
-    icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+    icon: Building2,
   },
 ]
 </script>

@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import '@/vendor/echarts-config'
 
 import App from './App.vue'
 import router from './router'
+import { setNavigateToLogin } from './api/request'
 import { permissionDirective } from './directives/permission'
 
 // SAFETY: ElMessageBox/ElMessage 是 JS API 调用（非模板组件），
@@ -17,15 +17,13 @@ import './styles/index.scss'
 
 const app = createApp(App)
 
-// 注册所有 Element Plus 图标
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
-
 // 注册全局权限指令 v-permission="'student:delete'"
 app.directive('permission', permissionDirective)
 
 app.use(createPinia())
 app.use(router)
+
+// 注册 401 跳转处理器，使 request.ts 可通过 router 导航而非硬编码 location
+setNavigateToLogin(() => router.push('/login'))
 
 app.mount('#app')

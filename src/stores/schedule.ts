@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { defineStore } from 'pinia'
 import { createLocalStorageRepo } from '@/shared/repository/localStorage'
 
@@ -77,32 +77,33 @@ const repo = createLocalStorageRepo<ScheduleConfig>(
 )
 
 export const useScheduleStore = defineStore('schedule', () => {
-  const config = ref<ScheduleConfig>(repo.load())
+  const _config = ref<ScheduleConfig>(repo.load())
+  const config = readonly(_config)
 
-  const courses = computed(() => config.value.courses)
-  const semester = computed(() => config.value.semester)
-  const maxSlots = computed(() => config.value.maxSlots)
-  const visibility = computed(() => config.value.visibility)
-  const whitelist = computed(() => config.value.whitelist)
+  const courses = computed(() => _config.value.courses)
+  const semester = computed(() => _config.value.semester)
+  const maxSlots = computed(() => _config.value.maxSlots)
+  const visibility = computed(() => _config.value.visibility)
+  const whitelist = computed(() => _config.value.whitelist)
 
   function persist() {
-    repo.save(config.value)
+    repo.save(_config.value)
   }
 
   function addCourse(item: Omit<CourseItem, 'id' | 'color'>) {
     const id = `course-${Date.now()}`
-    const color = getDefaultColor(config.value.courses.length)
-    config.value.courses.push({ ...item, id, color })
+    const color = getDefaultColor(_config.value.courses.length)
+    _config.value.courses.push({ ...item, id, color })
     persist()
   }
 
   function removeCourse(id: string) {
-    config.value.courses = config.value.courses.filter(c => c.id !== id)
+    _config.value.courses = _config.value.courses.filter(c => c.id !== id)
     persist()
   }
 
   function updateCourse(id: string, updates: Partial<CourseItem>) {
-    const course = config.value.courses.find(c => c.id === id)
+    const course = _config.value.courses.find(c => c.id === id)
     if (course) {
       Object.assign(course, updates)
       persist()
@@ -110,39 +111,39 @@ export const useScheduleStore = defineStore('schedule', () => {
   }
 
   function setSemester(value: string) {
-    config.value.semester = value
+    _config.value.semester = value
     persist()
   }
 
   function setMaxSlots(value: number) {
-    config.value.maxSlots = value
+    _config.value.maxSlots = value
     persist()
   }
 
   function setVisibility(value: ScheduleVisibility) {
-    config.value.visibility = value
+    _config.value.visibility = value
     persist()
   }
 
   function setWhitelist(value: string[]) {
-    config.value.whitelist = value
+    _config.value.whitelist = value
     persist()
   }
 
   function addToWhitelist(userId: string) {
-    if (!config.value.whitelist.includes(userId)) {
-      config.value.whitelist.push(userId)
+    if (!_config.value.whitelist.includes(userId)) {
+      _config.value.whitelist.push(userId)
       persist()
     }
   }
 
   function removeFromWhitelist(userId: string) {
-    config.value.whitelist = config.value.whitelist.filter(id => id !== userId)
+    _config.value.whitelist = _config.value.whitelist.filter(id => id !== userId)
     persist()
   }
 
   function resetToDemo() {
-    config.value = JSON.parse(JSON.stringify(createDemoData()))
+    _config.value = JSON.parse(JSON.stringify(createDemoData()))
     persist()
   }
 

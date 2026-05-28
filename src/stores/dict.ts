@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, readonly } from 'vue'
 
 export interface DictItem {
   label: string
@@ -13,7 +13,7 @@ export interface DictGroup {
 }
 
 export const useDictStore = defineStore('dict', () => {
-  const dicts = ref<Record<string, DictItem[]>>({
+  const _dicts = ref<Record<string, DictItem[]>>({
     college: [
       { label: '信息工程学院', value: 1 },
       { label: '经济管理学院', value: 2 },
@@ -54,13 +54,14 @@ export const useDictStore = defineStore('dict', () => {
       { label: '2025-2026学年 第二学期', value: '2025-2026-2' }
     ]
   })
+  const dicts = readonly(_dicts)
 
   function getDict(code: string): DictItem[] {
-    return dicts.value[code] ?? []
+    return _dicts.value[code] ?? []
   }
 
   function getLabel(code: string, value: string | number): string {
-    const item = dicts.value[code]?.find((d) => d.value === value)
+    const item = _dicts.value[code]?.find((d) => d.value === value)
     return item?.label ?? String(value)
   }
 

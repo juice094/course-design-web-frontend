@@ -3,7 +3,7 @@
     <!-- 侧边栏 -->
     <el-aside :width="isCollapse ? '64px' : '220px'" class="sidebar">
       <div class="logo">
-        <el-icon size="28" color="#fff"><DataLine /></el-icon>
+        <el-icon size="28" color="#fff"><LayoutDashboard :size="28" color="#fff" /></el-icon>
         <span v-show="!isCollapse" class="logo-text">教务平台</span>
       </div>
 
@@ -21,7 +21,9 @@
           :key="menu.path"
           :index="menu.path"
         >
-          <el-icon><component :is="menu.icon" /></el-icon>
+          <el-icon>
+            <component :is="iconMap[menu.icon]" :size="18" />
+          </el-icon>
           <template #title>{{ menu.title }}</template>
         </el-menu-item>
       </el-menu>
@@ -32,8 +34,8 @@
       <el-header class="app-header" height="64px">
         <div class="header-left">
           <el-icon class="collapse-btn" @click="toggleCollapse">
-            <Fold v-if="!isCollapse" />
-            <Expand v-else />
+            <PanelLeftClose v-if="!isCollapse" :size="20" />
+            <PanelLeftOpen v-else :size="20" />
           </el-icon>
           <Breadcrumb />
         </div>
@@ -41,9 +43,9 @@
         <div class="header-right">
           <el-dropdown @command="handleCommand">
             <span class="user-info">
-              <el-avatar :size="32" :icon="UserFilled" />
+              <el-avatar :size="32" :icon="User" />
               <span class="username">{{ userStore.userInfo?.realName }}</span>
-              <el-icon><ArrowDown /></el-icon>
+              <el-icon><ChevronDown :size="14" /></el-icon>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -71,9 +73,24 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { DataLine, Fold, Expand, UserFilled, ArrowDown } from '@element-plus/icons-vue'
+import {
+  LayoutDashboard,
+  PanelLeftClose,
+  PanelLeftOpen,
+  User,
+  ChevronDown,
+  Home,
+  BookOpen,
+  BarChart3,
+  Plus,
+  CalendarDays,
+  Star,
+  FileText,
+  Info,
+} from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
 import { ROLE_NAMES } from '@/utils/permission'
+import { adminRoutes } from '@/router/admin'
 
 const route = useRoute()
 const router = useRouter()
@@ -88,21 +105,34 @@ const roleName = computed(() => {
   return role ? ROLE_NAMES[role] : ''
 })
 
-const allMenus = [
-  { path: '/', title: '首页概览', icon: 'HomeFilled', code: 'Home' },
-  { path: '/student', title: '学生管理', icon: 'UserFilled', code: 'Student' },
-  { path: '/teacher', title: '教师管理', icon: 'UserFilled', code: 'Teacher' },
-  { path: '/course', title: '课程管理', icon: 'Reading', code: 'Course' },
-  { path: '/score', title: '成绩管理', icon: 'TrendCharts', code: 'Score' },
-  { path: '/course-select', title: '学生选课', icon: 'Plus', code: 'CourseSelect' },
-  { path: '/schedule', title: '排课管理', icon: 'Calendar', code: 'Schedule' },
-  { path: '/evaluation', title: '评教结果', icon: 'Star', code: 'Evaluation' },
-  { path: '/operation-log', title: '操作日志', icon: 'Document', code: 'OperationLog' },
-  { path: '/about', title: '关于系统', icon: 'InfoFilled', code: 'About' }
-]
+// 图标映射：路由 meta.icon（lucide 名）→ 组件
+const iconMap: Record<string, any> = {
+  Home,
+  User,
+  BookOpen,
+  BarChart3,
+  Plus,
+  CalendarDays,
+  Star,
+  FileText,
+  Info,
+}
+
+// 从路由配置自动生成菜单，避免与路由定义不同源
+const allMenus = computed(() => {
+  const adminRoute = adminRoutes.find((r) => r.path === '/')
+  return (adminRoute?.children || [])
+    .filter((c) => c.meta?.menu)
+    .map((c) => ({
+      path: c.path === '' ? '/' : `/${c.path}`,
+      title: c.meta!.title as string,
+      icon: c.meta!.icon as string,
+      code: c.meta!.menu as string,
+    }))
+})
 
 const filteredMenus = computed(() =>
-  allMenus.filter((m) => userStore.checkMenu(m.code))
+  allMenus.value.filter((m) => userStore.checkMenu(m.code))
 )
 
 function toggleCollapse() {

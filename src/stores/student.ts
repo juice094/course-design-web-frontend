@@ -1,7 +1,7 @@
 ﻿import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, readonly } from 'vue'
 import type { Student } from '@/types'
-import { persist, restore } from '@/vendor/vue-utils'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 const PERSIST_KEY = 'students'
 
@@ -18,34 +18,45 @@ const mockStudents: Student[] = [
   { id: 2022003, name: '郑丽', gender: '女', age: 20, major: '软件工程', grade: '大二', enrollmentYear: 2022 }
 ]
 
+const persistPlugin = createPersistPlugin<Student[]>({
+  key: PERSIST_KEY,
+  fallback: () => mockStudents,
+})
+
 export const useStudentStore = defineStore('student', () => {
-  const students = ref<Student[]>([])
+  const _students = ref<Student[]>([])
+  const students = readonly(_students)
 
   function loadStudents() {
-    if (students.value.length === 0) {
-      students.value = restore<Student[]>(PERSIST_KEY, mockStudents)
+    if (_students.value.length === 0) {
+      _students.value = persistPlugin.load()
     }
   }
 
   function addStudent(s: Student) {
-    students.value.push(s)
-    persist(PERSIST_KEY, students.value)
+    _students.value.push(s)
+    persistPlugin.save(_students.value)
   }
 
   function updateStudent(s: Student) {
-    const idx = students.value.findIndex((item) => item.id === s.id)
+    const idx = _students.value.findIndex((item) => item.id === s.id)
     if (idx !== -1) {
-      students.value[idx] = s
-      persist(PERSIST_KEY, students.value)
+      _students.value[idx] = s
+      persistPlugin.save(_students.value)
     }
   }
 
   function deleteStudent(id: number) {
-    const idx = students.value.findIndex((item) => item.id === id)
+    const idx = _students.value.findIndex((item) => item.id === id)
     if (idx !== -1) {
-      students.value.splice(idx, 1)
-      persist(PERSIST_KEY, students.value)
+      _students.value.splice(idx, 1)
+      persistPlugin.save(_students.value)
     }
+  }
+
+  function restoreAt(index: number, item: Student) {
+    _students.value.splice(index, 0, item)
+    persistPlugin.save(_students.value)
   }
 
   return {
@@ -53,6 +64,7 @@ export const useStudentStore = defineStore('student', () => {
     loadStudents,
     addStudent,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    restoreAt
   }
 })

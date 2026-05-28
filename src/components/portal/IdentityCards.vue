@@ -2,9 +2,7 @@
   <div class="section">
     <div class="section-header">
       <div class="section-icon">
-        <svg class="icon-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-        </svg>
+        <IdCard class="icon-svg" :size="16" />
       </div>
       <h2 class="section-title">身份卡片</h2>
     </div>
@@ -18,19 +16,14 @@
         class="card"
       >
         <div class="card-icon student">
-          <svg class="card-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-          </svg>
+          <GraduationCap class="card-svg" :size="20" />
         </div>
         <div class="card-info">
           <h3 class="card-name">学生</h3>
           <p class="card-desc">在校本科生，主修计算机科学与技术</p>
         </div>
         <div class="card-arrow">
-          <svg class="arrow-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight class="arrow-svg" :size="16" />
         </div>
       </a>
 
@@ -42,18 +35,14 @@
         class="card"
       >
         <div class="card-icon teacher">
-          <svg class="card-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-          </svg>
+          <FlaskConical class="card-svg" :size="20" />
         </div>
         <div class="card-info">
           <h3 class="card-name">教师</h3>
           <p class="card-desc">课程助教，负责实验课指导与答疑</p>
         </div>
         <div class="card-arrow">
-          <svg class="arrow-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight class="arrow-svg" :size="16" />
         </div>
       </a>
 
@@ -65,18 +54,14 @@
         class="card"
       >
         <div class="card-icon developer">
-          <svg class="card-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
+          <Code2 class="card-svg" :size="20" />
         </div>
         <div class="card-info">
           <h3 class="card-name">开发者</h3>
           <p class="card-desc">开源贡献者，Vue / Rust 生态爱好者</p>
         </div>
         <div class="card-arrow">
-          <svg class="arrow-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight class="arrow-svg" :size="16" />
         </div>
       </a>
     </div>
@@ -84,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+import { IdCard, GraduationCap, FlaskConical, Code2, ChevronRight } from 'lucide-vue-next'
 import { usePortalStore } from '@/stores/portal'
 import { useUserStore } from '@/stores/user'
 import type { IdentityCardLinksConfig } from '@/types/portal'

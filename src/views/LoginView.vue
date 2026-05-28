@@ -19,9 +19,12 @@
           <el-input
             v-model="form.username"
             placeholder="请输入用户名"
-            :prefix-icon="User"
             clearable
-          />
+          >
+            <template #prefix>
+              <User :size="16" class="input-prefix-icon" />
+            </template>
+          </el-input>
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
@@ -29,10 +32,13 @@
             v-model="form.password"
             type="password"
             placeholder="请输入密码"
-            :prefix-icon="Lock"
             show-password
             clearable
-          />
+          >
+            <template #prefix>
+              <Lock :size="16" class="input-prefix-icon" />
+            </template>
+          </el-input>
         </el-form-item>
 
         <el-form-item>
@@ -62,7 +68,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
+import { User, Lock } from 'lucide-vue-next'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 
@@ -129,6 +135,10 @@ async function handleLogin() {
     font-size: 13px;
     color: #94a3b8;
   }
+}
+
+.input-prefix-icon {
+  color: #a8abb2;
 }
 
 .login-tips {

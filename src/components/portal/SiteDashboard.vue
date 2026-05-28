@@ -17,35 +17,19 @@
 
       <div class="badge-list">
         <span class="badge">
-          <svg
-            class="badge-icon green"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          ><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" /></svg>
+          <Globe class="badge-icon green" :size="14" />
           Vue 3
         </span>
         <span class="badge">
-          <svg
-            class="badge-icon yellow"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          ><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+          <Zap class="badge-icon yellow" :size="14" />
           Vite
         </span>
         <span class="badge">
-          <svg
-            class="badge-icon blue"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          ><path d="M3 3h18v18H3V3zm14.5 14.5v-3h-2v3h-2v-5h-2v5h-2v-7h-2v7h-2v-4h-2v4H5v-9h14v9h-1.5z" /></svg>
+          <FileCode class="badge-icon blue" :size="14" />
           TypeScript
         </span>
         <span class="badge">
-          <svg
-            class="badge-icon sky"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          ><path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C10.337,13.382,8.976,12,6.001,12z" /></svg>
+          <Wind class="badge-icon sky" :size="14" />
           Tailwind
         </span>
       </div>
@@ -55,6 +39,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { Globe, Zap, FileCode, Wind } from 'lucide-vue-next'
 
 const START_DATE = new Date('2026-03-23T00:00:00').getTime()
 
@@ -103,6 +88,11 @@ onUnmounted(() => {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+.dark .dashboard {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 @media (min-width: 768px) {
   .dashboard {
     flex-direction: row;
@@ -111,7 +101,7 @@ onUnmounted(() => {
 }
 
 .clock-panel {
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.85);
   color: #fff;
   padding: 1rem 2rem;
   display: flex;
@@ -125,16 +115,18 @@ onUnmounted(() => {
   overflow: hidden;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: background 1s;
+  border-radius: 1.5rem 0 0 1.5rem;
 }
 
 .dark .clock-panel {
-  background: #000;
+  background: rgba(0, 0, 0, 0.9);
 }
 
 @media (min-width: 768px) {
   .clock-panel {
     font-size: 1.875rem;
     padding: 0 2rem;
+    border-radius: 1.5rem 0 0 1.5rem;
   }
 }
 

@@ -1,7 +1,8 @@
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { defineStore } from 'pinia'
 import defaultBg from '@/assets/portal-bg.jpg'
 import { schoolInfo } from '@/data/profile'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 import type { CardColor, CustomCard, BackgroundConfig, SectionConfig, SectionSize, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
 export type { CardColor, CustomCard, BackgroundConfig, SectionConfig, SectionSize, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
 
@@ -42,7 +43,7 @@ const defaultConfig: PortalConfig = {
     { id: 'profileCard', name: '个人名片', enabled: true, order: 0, size: 'full' },
     { id: 'schoolStats', name: '学校统计', enabled: true, order: 1, size: 'half' },
     { id: 'schoolLinks', name: '快速链接', enabled: true, order: 2, size: 'half' },
-    { id: 'courseSchedule', name: '课程表', enabled: true, order: 3, size: 'full' },
+    { id: 'courseSchedule', name: '课程表', enabled: false, order: 3, size: 'full' },
     { id: 'identityCards', name: '身份卡片', enabled: true, order: 4, size: 'full' },
     { id: 'articlesSection', name: '文章展示', enabled: true, order: 5, size: 'full' },
     { id: 'achievementsTimeline', name: '获奖成就', enabled: true, order: 6, size: 'half' },
@@ -72,34 +73,31 @@ function mergeSections(saved: SectionConfig[] | undefined): SectionConfig[] {
 }
 
 function loadConfig(): PortalConfig {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as PortalConfig
-      const mergedBg = { ...defaultConfig.background, ...parsed.background }
-      // 图片模式下若 URL 为空或空白，回退到默认图，避免显示空白背景
-      if (mergedBg.type === 'image' && !mergedBg.imageUrl?.trim()) {
-        mergedBg.imageUrl = DEFAULT_IMAGE_URL
-      }
-      return {
-        background: mergedBg,
-        sections: mergeSections(parsed.sections),
-        customCards: parsed.customCards ?? defaultConfig.customCards,
-        identityCardLinks: {
-          ...defaultIdentityCardLinks,
-          ...parsed.identityCardLinks,
-        },
-      }
-    }
-  } catch {
-    // 解析失败，回退到默认
+  const saved = persistPlugin.load()
+  const mergedBg = { ...defaultConfig.background, ...saved.background }
+  // 图片模式下若 URL 为空或空白，回退到默认图，避免显示空白背景
+  if (mergedBg.type === 'image' && !mergedBg.imageUrl?.trim()) {
+    mergedBg.imageUrl = DEFAULT_IMAGE_URL
   }
-  return JSON.parse(JSON.stringify(defaultConfig))
+  return {
+    background: mergedBg,
+    sections: mergeSections(saved.sections),
+    customCards: saved.customCards ?? defaultConfig.customCards,
+    identityCardLinks: {
+      ...defaultIdentityCardLinks,
+      ...saved.identityCardLinks,
+    },
+  }
 }
 
 function saveConfig(config: PortalConfig): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+  persistPlugin.save(config)
 }
+
+const persistPlugin = createPersistPlugin<PortalConfig>({
+  key: STORAGE_KEY,
+  fallback: () => JSON.parse(JSON.stringify(defaultConfig)),
+})
 
 const colorMap: Record<CardColor, { bg: string; text: string; darkText: string }> = {
   blue: { bg: 'rgba(59,130,246,0.2)', text: '#2563eb', darkText: '#60a5fa' },
@@ -117,17 +115,19 @@ export function getCardColorClasses(color: CardColor): { bg: string; text: strin
 }
 
 export const usePortalStore = defineStore('portal', () => {
-  const config = ref<PortalConfig>(loadConfig())
-  const settingsOpen = ref(false)
+  const _config = ref<PortalConfig>(loadConfig())
+  const config = readonly(_config)
+  const _settingsOpen = ref(false)
+  const settingsOpen = readonly(_settingsOpen)
 
   const enabledSections = computed(() =>
-    config.value.sections
+    _config.value.sections
       .filter((s) => s.enabled)
       .sort((a, b) => a.order - b.order),
   )
 
   const bgStyle = computed(() => {
-    const bg = config.value.background
+    const bg = _config.value.background
     switch (bg.type) {
       case 'gradient':
         return {
@@ -145,20 +145,20 @@ export const usePortalStore = defineStore('portal', () => {
   })
 
   function updateBackground(updates: Partial<BackgroundConfig>) {
-    Object.assign(config.value.background, updates)
-    saveConfig(config.value)
+    Object.assign(_config.value.background, updates)
+    saveConfig(_config.value)
   }
 
   function toggleSection(id: string) {
-    const section = config.value.sections.find((s) => s.id === id)
+    const section = _config.value.sections.find((s) => s.id === id)
     if (section) {
       section.enabled = !section.enabled
-      saveConfig(config.value)
+      saveConfig(_config.value)
     }
   }
 
   function moveSection(id: string, direction: 'up' | 'down') {
-    const sections = config.value.sections.filter((s) => s.enabled).sort((a, b) => a.order - b.order)
+    const sections = _config.value.sections.filter((s) => s.enabled).sort((a, b) => a.order - b.order)
     const idx = sections.findIndex((s) => s.id === id)
     if (idx === -1) return
 
@@ -169,41 +169,41 @@ export const usePortalStore = defineStore('portal', () => {
     sections[idx].order = sections[targetIdx].order
     sections[targetIdx].order = temp
 
-    saveConfig(config.value)
+    saveConfig(_config.value)
   }
 
   function reorderSections(newOrder: string[]) {
     newOrder.forEach((id, index) => {
-      const section = config.value.sections.find((s) => s.id === id)
+      const section = _config.value.sections.find((s) => s.id === id)
       if (section) section.order = index
     })
-    saveConfig(config.value)
+    saveConfig(_config.value)
   }
 
   function updateSectionSize(id: string, size: SectionSize) {
-    const section = config.value.sections.find((s) => s.id === id)
+    const section = _config.value.sections.find((s) => s.id === id)
     if (section) {
       section.size = size
-      saveConfig(config.value)
+      saveConfig(_config.value)
     }
   }
 
   function addCustomCard(card: Omit<CustomCard, 'id'>) {
     const id = `custom-${Date.now()}`
-    config.value.customCards.push({ ...card, id })
-    saveConfig(config.value)
+    _config.value.customCards.push({ ...card, id })
+    saveConfig(_config.value)
   }
 
   function removeCustomCard(id: string) {
-    config.value.customCards = config.value.customCards.filter((c) => c.id !== id)
-    saveConfig(config.value)
+    _config.value.customCards = _config.value.customCards.filter((c) => c.id !== id)
+    saveConfig(_config.value)
   }
 
   function updateCustomCard(id: string, updates: Partial<CustomCard>) {
-    const card = config.value.customCards.find((c) => c.id === id)
+    const card = _config.value.customCards.find((c) => c.id === id)
     if (card) {
       Object.assign(card, updates)
-      saveConfig(config.value)
+      saveConfig(_config.value)
     }
   }
 
@@ -212,26 +212,26 @@ export const usePortalStore = defineStore('portal', () => {
     field: keyof IdentityCardLink,
     value: string,
   ) {
-    config.value.identityCardLinks[card][field] = value
-    saveConfig(config.value)
+    _config.value.identityCardLinks[card][field] = value
+    saveConfig(_config.value)
   }
 
   function resetIdentityCardLinks() {
-    config.value.identityCardLinks = JSON.parse(JSON.stringify(defaultIdentityCardLinks))
-    saveConfig(config.value)
+    _config.value.identityCardLinks = JSON.parse(JSON.stringify(defaultIdentityCardLinks))
+    saveConfig(_config.value)
   }
 
   function resetConfig() {
-    config.value = JSON.parse(JSON.stringify(defaultConfig))
-    saveConfig(config.value)
+    _config.value = JSON.parse(JSON.stringify(defaultConfig))
+    saveConfig(_config.value)
   }
 
   function openSettings() {
-    settingsOpen.value = true
+    _settingsOpen.value = true
   }
 
   function closeSettings() {
-    settingsOpen.value = false
+    _settingsOpen.value = false
   }
 
   return {

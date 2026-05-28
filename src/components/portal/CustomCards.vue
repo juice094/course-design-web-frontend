@@ -1,10 +1,8 @@
 <template>
-  <div class="section">
+  <div v-if="cards.length > 0" class="section">
     <div class="section-header">
       <div class="section-icon" :style="{ background: 'rgba(99,102,241,0.2)' }">
-        <svg class="icon-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
+        <Plus class="icon-svg" :size="16" />
       </div>
       <h2 class="section-title">自定义链接</h2>
     </div>
@@ -20,23 +18,20 @@
         :style="{ '--card-bg': getCardColorClasses(card.color).bg, '--card-text': getCardColorClasses(card.color).text }"
       >
         <div class="custom-icon" :style="{ background: getCardColorClasses(card.color).bg, color: getCardColorClasses(card.color).text }">
-          <svg class="custom-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" :d="card.iconPath" />
-          </svg>
+          <Link class="custom-svg" :size="20" />
         </div>
         <div class="custom-info">
           <h4 class="custom-name">{{ card.title }}</h4>
           <p class="custom-desc">{{ card.description }}</p>
         </div>
-        <svg class="custom-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
+        <ChevronRight class="custom-arrow" :size="16" />
       </a>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Plus, Link, ChevronRight } from 'lucide-vue-next'
 import { usePortalStore, getCardColorClasses } from '@/stores/portal'
 
 const portalStore = usePortalStore()

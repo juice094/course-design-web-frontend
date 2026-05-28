@@ -1,5 +1,6 @@
-import { ref } from 'vue'
+import { ref, readonly } from 'vue'
 import { defineStore } from 'pinia'
+import { createPersistPlugin } from '@/shared/persist/plugin'
 
 import type { Moment } from '@/types/content'
 export type { Moment } from '@/types/content'
@@ -26,46 +27,38 @@ const demoMoments: Moment[] = [
   },
 ]
 
-function loadMoments(): Moment[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw) as Moment[]
-  } catch {
-    // ignore
-  }
-  return JSON.parse(JSON.stringify(demoMoments))
-}
-
-function saveMoments(moments: Moment[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(moments))
-}
+const persistPlugin = createPersistPlugin<Moment[]>({
+  key: STORAGE_KEY,
+  fallback: () => JSON.parse(JSON.stringify(demoMoments)),
+})
 
 export const useMomentStore = defineStore('moments', () => {
-  const moments = ref<Moment[]>(loadMoments())
+  const _moments = ref<Moment[]>(persistPlugin.load())
+  const moments = readonly(_moments)
 
   function addMoment(item: Omit<Moment, 'id' | 'date'>) {
     const id = `moment-${Date.now()}`
     const date = new Date().toISOString()
-    moments.value.unshift({ ...item, id, date })
-    saveMoments(moments.value)
+    _moments.value.unshift({ ...item, id, date })
+    persistPlugin.save(_moments.value)
   }
 
   function removeMoment(id: string) {
-    moments.value = moments.value.filter(m => m.id !== id)
-    saveMoments(moments.value)
+    _moments.value = _moments.value.filter(m => m.id !== id)
+    persistPlugin.save(_moments.value)
   }
 
   function updateMoment(id: string, updates: Partial<Moment>) {
-    const moment = moments.value.find(m => m.id === id)
+    const moment = _moments.value.find(m => m.id === id)
     if (moment) {
       Object.assign(moment, updates)
-      saveMoments(moments.value)
+      persistPlugin.save(_moments.value)
     }
   }
 
   function resetToDemo() {
-    moments.value = JSON.parse(JSON.stringify(demoMoments))
-    saveMoments(moments.value)
+    _moments.value = JSON.parse(JSON.stringify(demoMoments))
+    persistPlugin.save(_moments.value)
   }
 
   return {

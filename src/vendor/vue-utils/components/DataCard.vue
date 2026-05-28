@@ -18,8 +18,10 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 interface Props {
-  icon: string
+  icon: Component
   iconBg: string
   label: string
   value: string | number

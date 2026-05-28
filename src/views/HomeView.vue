@@ -74,7 +74,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { UserFilled, Male, Female, School, Reading, TrendCharts } from '@element-plus/icons-vue'
+import { User, Users, GraduationCap, BookOpen, BarChart3 } from 'lucide-vue-next'
 import { DataCard, ChartPanel } from '@/vendor/vue-utils'
 import { useStudentStore } from '@/stores/student'
 import { useCourseStore } from '@/stores/course'
@@ -91,10 +91,10 @@ onMounted(() => {
 })
 
 const summaryCards = computed(() => [
-  { icon: 'UserFilled', iconBg: '#409eff', label: '在校学生总数', value: studentStore.students.length || 12486, trend: 5.2 },
-  { icon: 'Male', iconBg: '#67c23a', label: '男生人数', value: studentStore.students.filter((s) => s.gender === '男').length || 6820, trend: 3.1 },
-  { icon: 'Female', iconBg: '#e6a23c', label: '女生人数', value: studentStore.students.filter((s) => s.gender === '女').length || 5666, trend: 7.8 },
-  { icon: 'Reading', iconBg: '#f56c6c', label: '开设课程数', value: courseStore.courses.length || 42, trend: 2.4 }
+  { icon: User, iconBg: '#409eff', label: '在校学生总数', value: studentStore.students.length || 12486, trend: 5.2 },
+  { icon: User, iconBg: '#67c23a', label: '男生人数', value: studentStore.students.filter((s) => s.gender === '男').length || 6820, trend: 3.1 },
+  { icon: Users, iconBg: '#e6a23c', label: '女生人数', value: studentStore.students.filter((s) => s.gender === '女').length || 5666, trend: 7.8 },
+  { icon: BookOpen, iconBg: '#f56c6c', label: '开设课程数', value: courseStore.courses.length || 42, trend: 2.4 }
 ])
 
 const majorOption = computed(() => ({

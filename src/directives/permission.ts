@@ -6,7 +6,12 @@ export const permissionDirective: Directive = {
     const userStore = useUserStore()
     const code = binding.value as string
     if (!userStore.checkButton(code)) {
-      el.parentNode?.removeChild(el)
+      el.style.display = 'none'
     }
+  },
+  updated(el, binding) {
+    const userStore = useUserStore()
+    const code = binding.value as string
+    el.style.display = userStore.checkButton(code) ? '' : 'none'
   }
 }

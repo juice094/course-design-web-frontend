@@ -1,18 +1,20 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 
 export const useAppStore = defineStore('app', () => {
-  const sidebarCollapsed = ref(false)
-  const theme = ref<'light' | 'dark'>('light')
+  const _sidebarCollapsed = ref(false)
+  const sidebarCollapsed = readonly(_sidebarCollapsed)
+  const _theme = ref<'light' | 'dark'>('light')
+  const theme = readonly(_theme)
 
-  const isDark = computed(() => theme.value === 'dark')
+  const isDark = computed(() => _theme.value === 'dark')
 
   function toggleSidebar() {
-    sidebarCollapsed.value = !sidebarCollapsed.value
+    _sidebarCollapsed.value = !_sidebarCollapsed.value
   }
 
   function toggleTheme() {
-    theme.value = theme.value === 'light' ? 'dark' : 'light'
+    _theme.value = _theme.value === 'light' ? 'dark' : 'light'
   }
 
   return { sidebarCollapsed, theme, isDark, toggleSidebar, toggleTheme }

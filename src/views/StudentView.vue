@@ -142,11 +142,8 @@ function handleEdit(row: Student) {
 
 function handleFormSubmit(data: Student) {
   if (editingStudent.value) {
-    // 编辑模式：替换原有数据
-    const index = studentStore.students.findIndex((s) => s.id === data.id)
-    if (index !== -1) {
-      studentStore.students[index] = { ...data }
-    }
+    // 编辑模式：通过 action 更新
+    studentStore.updateStudent(data)
   } else {
     // 新增模式：检查学号是否重复
     const exists = studentStore.students.some((s) => s.id === data.id)
@@ -154,7 +151,7 @@ function handleFormSubmit(data: Student) {
       ElMessageBox.alert('该学号已存在', '提示', { type: 'warning' })
       return
     }
-    studentStore.students.push({ ...data })
+    studentStore.addStudent(data)
   }
 }
 
@@ -184,10 +181,9 @@ async function handleImport(file: any) {
         enrollmentYear: Number(row['入学年份'] || row['enrollmentYear'] || new Date().getFullYear())
       }
       if (exists) {
-        const idx = studentStore.students.findIndex((s) => s.id === id)
-        studentStore.students[idx] = student
+        studentStore.updateStudent(student)
       } else {
-        studentStore.students.push(student)
+        studentStore.addStudent(student)
         count++
       }
     }
@@ -205,7 +201,7 @@ function handleDelete(row: Student) {
     // 记录删除前的状态，用于回溯
     lastDeleted.value = { item: { ...row }, index }
 
-    studentStore.students.splice(index, 1)
+    studentStore.deleteStudent(row.id)
 
     // 显示可撤销的通知
     ElNotification({
@@ -221,7 +217,7 @@ function handleDelete(row: Student) {
             onClick: () => {
               if (lastDeleted.value) {
                 const { item, index: idx } = lastDeleted.value
-                studentStore.students.splice(idx, 0, item)
+                studentStore.restoreAt(idx, item)
                 lastDeleted.value = null
                 ElNotification({ title: '已撤销', message: `恢复了学生 "${item.name}"`, type: 'info', duration: 3000 })
               }

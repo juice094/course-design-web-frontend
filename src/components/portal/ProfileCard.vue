@@ -116,6 +116,9 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   justify-content: space-between;
   transition: all 0.7s;
   min-height: 220px;
+  /* 容器查询：响应式基于卡片自身宽度，而非视口宽度 */
+  container-type: inline-size;
+  container-name: profile;
 }
 
 .dark .profile-card {
@@ -125,7 +128,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .profile-card:hover { transform: scale(1.01); }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .profile-card { padding: 2rem; min-height: 280px; }
 }
 
@@ -135,7 +138,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   gap: 1rem;
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .profile-header { gap: 1.5rem; }
 }
 
@@ -152,11 +155,11 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .profile-card:hover .avatar-wrap { transform: rotate(3deg); }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .avatar-wrap { width: 5rem; height: 5rem; border-radius: 1rem; }
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .avatar-wrap { width: 6rem; height: 6rem; }
 }
 
@@ -168,7 +171,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   background: #fff;
 }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .avatar { border-radius: 0.75rem; }
 }
 
@@ -181,7 +184,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   margin-bottom: 0.5rem;
 }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .profile-meta {
     flex-direction: row;
     align-items: center;
@@ -205,11 +208,11 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .dark .name { color: #fff; }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .name { font-size: 1.5rem; }
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .name { font-size: 1.875rem; }
 }
 
@@ -231,7 +234,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   color: #818cf8;
 }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .school-tag { font-size: 0.75rem; }
 }
 
@@ -256,11 +259,11 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .dark .bio { color: #cbd5e1; }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .bio { font-size: 0.875rem; }
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .bio { font-size: 1rem; -webkit-line-clamp: unset; }
 }
 
@@ -272,7 +275,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   gap: 1.25rem;
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .profile-footer {
     flex-direction: row;
     justify-content: space-between;
@@ -288,11 +291,11 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   justify-content: space-between;
 }
 
-@media (min-width: 640px) {
+@container profile (min-width: 640px) {
   .stats { gap: 1.5rem; justify-content: space-around; }
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .stats { width: auto; justify-content: flex-start; }
 }
 
@@ -306,7 +309,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .stat:hover .stat-num { transform: scale(1.1); }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .stat-num { font-size: 1.5rem; }
 }
 
@@ -330,7 +333,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .dark .stat-label { color: #94a3b8; }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .stat-label { font-size: 0.625rem; }
 }
 
@@ -341,7 +344,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   display: none;
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .stat-divider { display: block; height: 2.5rem; }
 }
 
@@ -353,7 +356,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   width: 100%;
 }
 
-@media (min-width: 768px) {
+@container profile (min-width: 768px) {
   .socials { width: auto; justify-content: flex-end; }
 }
 </style>

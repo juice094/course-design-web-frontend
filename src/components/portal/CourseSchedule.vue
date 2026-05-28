@@ -2,9 +2,7 @@
   <div class="schedule-section">
     <!-- 可见性占位：未授权 -->
     <div v-if="!canView" class="placeholder">
-      <svg class="placeholder-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-      </svg>
+      <Lock class="placeholder-icon" :size="40" />
       <p class="placeholder-text">
         {{ scheduleStore.visibility === 'private' ? '该内容仅作者可见' : '该内容仅指定用户可见' }}
       </p>
@@ -13,9 +11,7 @@
     <template v-else>
       <div class="schedule-header">
         <div class="semester-info">
-          <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
+          <CalendarDays class="icon" :size="16" />
           <span class="semester-text">{{ scheduleStore.semester }}</span>
         </div>
         <div class="legend">
@@ -64,6 +60,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { Lock, CalendarDays } from 'lucide-vue-next'
 import { useScheduleStore } from '@/stores/schedule'
 import { useUserStore } from '@/stores/user'
 

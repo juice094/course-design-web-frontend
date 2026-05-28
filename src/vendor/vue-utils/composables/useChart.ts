@@ -31,7 +31,7 @@ export function useChart(
   })
 
   watch(
-    () => option.value,
+    option,
     (newOpt) => {
       chart?.setOption(newOpt, true)
     },

@@ -23,6 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
+# Obsidian workspace
+.obsidian/
+
+# Temporary output
+dogfood-output/
+
 # Environment variables
 .env
 .env.local

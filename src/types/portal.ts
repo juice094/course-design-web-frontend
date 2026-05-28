@@ -21,11 +21,14 @@ export interface BackgroundConfig {
   imageUrl: string
 }
 
+export type SectionSize = 'full' | 'half' | 'third' | 'quarter'
+
 export interface SectionConfig {
   id: string
   name: string
   enabled: boolean
   order: number
+  size: SectionSize
 }
 
 export interface IdentityCardLink {

@@ -2,8 +2,8 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import defaultBg from '@/assets/portal-bg.jpg'
 import { schoolInfo } from '@/data/profile'
-import type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
-export type { CardColor, CustomCard, BackgroundConfig, SectionConfig, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
+import type { CardColor, CustomCard, BackgroundConfig, SectionConfig, SectionSize, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
+export type { CardColor, CustomCard, BackgroundConfig, SectionConfig, SectionSize, PortalConfig, IdentityCardLinksConfig, IdentityCardLink } from '@/types/portal'
 
 const STORAGE_KEY = 'portal-config-v1'
 
@@ -39,20 +39,20 @@ const defaultConfig: PortalConfig = {
     imageUrl: DEFAULT_IMAGE_URL,
   },
   sections: [
-    { id: 'profileCard', name: '个人名片', enabled: true, order: 0 },
-    { id: 'schoolStats', name: '学校统计', enabled: true, order: 1 },
-    { id: 'schoolLinks', name: '快速链接', enabled: true, order: 2 },
-    { id: 'courseSchedule', name: '课程表', enabled: true, order: 3 },
-    { id: 'identityCards', name: '身份卡片', enabled: true, order: 4 },
-    { id: 'articlesSection', name: '文章展示', enabled: true, order: 5 },
-    { id: 'achievementsTimeline', name: '获奖成就', enabled: true, order: 6 },
-    { id: 'projectShowcase', name: '项目展示', enabled: true, order: 7 },
-    { id: 'steamHub', name: '游戏时光', enabled: true, order: 8 },
-    { id: 'skillsRadar', name: '技能雷达', enabled: true, order: 9 },
-    { id: 'momentsFeed', name: '动态说说', enabled: true, order: 10 },
-    { id: 'photoWall', name: '照片墙', enabled: true, order: 11 },
-    { id: 'customCards', name: '自定义卡片', enabled: true, order: 12 },
-    { id: 'siteDashboard', name: '底部状态栏', enabled: true, order: 13 },
+    { id: 'profileCard', name: '个人名片', enabled: true, order: 0, size: 'full' },
+    { id: 'schoolStats', name: '学校统计', enabled: true, order: 1, size: 'half' },
+    { id: 'schoolLinks', name: '快速链接', enabled: true, order: 2, size: 'half' },
+    { id: 'courseSchedule', name: '课程表', enabled: true, order: 3, size: 'full' },
+    { id: 'identityCards', name: '身份卡片', enabled: true, order: 4, size: 'full' },
+    { id: 'articlesSection', name: '文章展示', enabled: true, order: 5, size: 'full' },
+    { id: 'achievementsTimeline', name: '获奖成就', enabled: true, order: 6, size: 'half' },
+    { id: 'projectShowcase', name: '项目展示', enabled: true, order: 7, size: 'half' },
+    { id: 'steamHub', name: '游戏时光', enabled: true, order: 8, size: 'half' },
+    { id: 'skillsRadar', name: '技能雷达', enabled: true, order: 9, size: 'half' },
+    { id: 'momentsFeed', name: '动态说说', enabled: true, order: 10, size: 'full' },
+    { id: 'photoWall', name: '照片墙', enabled: true, order: 11, size: 'full' },
+    { id: 'customCards', name: '自定义卡片', enabled: true, order: 12, size: 'full' },
+    { id: 'siteDashboard', name: '底部状态栏', enabled: true, order: 13, size: 'full' },
   ],
   customCards: [],
   identityCardLinks: defaultIdentityCardLinks,
@@ -62,13 +62,11 @@ function mergeSections(saved: SectionConfig[] | undefined): SectionConfig[] {
   const base = JSON.parse(JSON.stringify(defaultConfig.sections)) as SectionConfig[]
   if (!saved) return base
 
-  // 保留用户已有的 section 配置（enabled / order）
   const merged = base.map((section) => {
     const existing = saved.find((s) => s.id === section.id)
-    return existing ? { ...section, enabled: existing.enabled, order: existing.order } : section
+    return existing ? { ...section, enabled: existing.enabled, order: existing.order, size: existing.size || section.size } : section
   })
 
-  // 追加用户自定义的 section（如有）
   const customSections = saved.filter((s) => !base.find((b) => b.id === s.id))
   return [...merged, ...customSections]
 }
@@ -174,6 +172,22 @@ export const usePortalStore = defineStore('portal', () => {
     saveConfig(config.value)
   }
 
+  function reorderSections(newOrder: string[]) {
+    newOrder.forEach((id, index) => {
+      const section = config.value.sections.find((s) => s.id === id)
+      if (section) section.order = index
+    })
+    saveConfig(config.value)
+  }
+
+  function updateSectionSize(id: string, size: SectionSize) {
+    const section = config.value.sections.find((s) => s.id === id)
+    if (section) {
+      section.size = size
+      saveConfig(config.value)
+    }
+  }
+
   function addCustomCard(card: Omit<CustomCard, 'id'>) {
     const id = `custom-${Date.now()}`
     config.value.customCards.push({ ...card, id })
@@ -228,6 +242,8 @@ export const usePortalStore = defineStore('portal', () => {
     updateBackground,
     toggleSection,
     moveSection,
+    reorderSections,
+    updateSectionSize,
     addCustomCard,
     removeCustomCard,
     updateCustomCard,

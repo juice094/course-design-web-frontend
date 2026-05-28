@@ -292,6 +292,71 @@
               </section>
             </template>
 
+            <!-- 布局 Tab -->
+            <template v-if="activeTab === 'layout'">
+              <section class="setting-group">
+                <h4 class="group-title">卡片布局管理</h4>
+                <p class="group-desc">拖拽调整顺序，点击尺寸按钮改变宽度</p>
+                <div class="group-content">
+                  <div
+                    v-for="section in sortedSections"
+                    :key="section.id"
+                    class="layout-section-item"
+                    :class="{ disabled: !section.enabled, dragging: layoutDragId === section.id }"
+                    draggable="true"
+                    @dragstart="onLayoutDragStart(section.id, $event)"
+                    @dragend="onLayoutDragEnd"
+                    @dragenter.prevent="onLayoutDragEnter(section.id)"
+                    @dragover.prevent="onLayoutDragOver"
+                    @drop.prevent="onLayoutDrop(section.id, $event)"
+                  >
+                    <div class="layout-drag-handle"
+                      :class="{ 'is-dragging': layoutDragId === section.id }"
+                    >
+                      <span class="layout-drag-icon">⋮⋮</span>
+                      <label class="checkbox-label">
+                        <input
+                          type="checkbox"
+                          :checked="section.enabled"
+                          @change="portalStore.toggleSection(section.id)"
+                        >
+                        <span class="check-text">{{ section.name }}</span>
+                      </label>
+                      <div class="layout-size-picker">
+                        <button
+                          v-for="s in sizeOptions"
+                          :key="s.value"
+                          class="layout-size-btn"
+                          :class="{ active: section.size === s.value }"
+                          :title="s.label"
+                          @click="portalStore.updateSectionSize(section.id, s.value)"
+                        >
+                          {{ s.icon }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- 布局预览 -->
+              <section class="setting-group">
+                <h4 class="group-title">布局预览</h4>
+                <div class="group-content">
+                  <div class="layout-preview">
+                    <div
+                      v-for="section in enabledSectionsPreview"
+                      :key="section.id"
+                      class="layout-preview-cell"
+                      :class="`size-${section.size}`"
+                    >
+                      {{ section.name }}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </template>
+
             <!-- 课程表 Tab -->
             <template v-if="activeTab === 'schedule'">
               <section class="setting-group">
@@ -352,7 +417,7 @@
 import { ref, computed } from 'vue'
 import { usePortalStore, getCardColorClasses } from '@/stores/portal'
 import { useThemeStore } from '@/stores/theme'
-import type { CardColor } from '@/stores/portal'
+import type { CardColor, SectionSize } from '@/stores/portal'
 import SettingsScheduleEditor from './SettingsScheduleEditor.vue'
 import SettingsArticleEditor from './SettingsArticleEditor.vue'
 import SettingsPhotoEditor from './SettingsPhotoEditor.vue'
@@ -372,6 +437,7 @@ const identityCards = [
 ]
 const tabs = [
   { id: 'appearance', label: '外观', icon: '🎨' },
+  { id: 'layout', label: '布局', icon: '📐' },
   { id: 'schedule', label: '课程表', icon: '📅' },
   { id: 'articles', label: '文章', icon: '📝' },
   { id: 'photos', label: '照片', icon: '🖼️' },
@@ -403,6 +469,66 @@ const newCard = ref({
 })
 
 const colorOptions: CardColor[] = ['blue', 'emerald', 'amber', 'rose', 'purple', 'indigo', 'cyan', 'orange']
+
+const sizeOptions = [
+  { value: 'full' as SectionSize, label: '全宽', icon: '▭' },
+  { value: 'half' as SectionSize, label: '半宽', icon: '▭▭' },
+  { value: 'third' as SectionSize, label: '三分之一', icon: '▭▭▭' },
+  { value: 'quarter' as SectionSize, label: '四分之一', icon: '▭▭▭▭' },
+]
+
+// 布局拖拽状态
+const layoutDragId = ref<string | null>(null)
+const layoutDragOverId = ref<string | null>(null)
+
+const enabledSectionsPreview = computed(() =>
+  sortedSections.value.filter((s) => s.enabled),
+)
+
+function onLayoutDragStart(id: string, e: DragEvent) {
+  layoutDragId.value = id
+  if (e.dataTransfer) {
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', id)
+  }
+}
+
+function onLayoutDragEnd() {
+  layoutDragId.value = null
+  layoutDragOverId.value = null
+}
+
+function onLayoutDragEnter(id: string) {
+  if (!layoutDragId.value || layoutDragId.value === id) return
+  layoutDragOverId.value = id
+}
+
+function onLayoutDragOver(e: DragEvent) {
+  e.preventDefault()
+  if (e.dataTransfer) {
+    e.dataTransfer.dropEffect = 'move'
+  }
+}
+
+function onLayoutDrop(targetId: string, e: DragEvent) {
+  e.preventDefault()
+  const fromId = e.dataTransfer?.getData('text/plain')
+  if (!fromId || fromId === targetId) return
+
+  const sections = [...sortedSections.value]
+  const fromIdx = sections.findIndex((s) => s.id === fromId)
+  const toIdx = sections.findIndex((s) => s.id === targetId)
+
+  if (fromIdx === -1 || toIdx === -1) return
+
+  const newOrder = sections.map((s) => s.id)
+  newOrder.splice(fromIdx, 1)
+  newOrder.splice(toIdx, 0, fromId)
+
+  portalStore.reorderSections(newOrder)
+  layoutDragId.value = null
+  layoutDragOverId.value = null
+}
 
 function openAddForm() {
   showAddForm.value = true
@@ -1149,5 +1275,156 @@ function submitCard() {
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
+}
+/* 布局 Tab 样式 */
+.group-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #666);
+  margin: -0.5rem 0 0.75rem;
+  opacity: 0.8;
+}
+
+.layout-section-item {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.layout-section-item.disabled {
+  opacity: 0.5;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.layout-section-item.dragging {
+  opacity: 0.7;
+  border-color: rgba(26, 95, 42, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.layout-drag-handle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: grab;
+}
+
+.layout-drag-handle:active {
+  cursor: grabbing;
+}
+
+.layout-drag-icon {
+  font-size: 1rem;
+  letter-spacing: -2px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.layout-drag-handle .checkbox-label {
+  flex: 1;
+  margin: 0;
+}
+
+.layout-size-picker {
+  display: flex;
+  gap: 0.125rem;
+  flex-shrink: 0;
+}
+
+.layout-size-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--text-primary, #333);
+}
+
+.layout-size-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.layout-size-btn.active {
+  background: rgba(26, 95, 42, 0.9);
+  color: #fff;
+  border-color: rgba(26, 95, 42, 0.5);
+}
+
+.dark .layout-size-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+}
+
+.dark .layout-size-btn.active {
+  background: rgba(34, 197, 94, 0.8);
+  color: #fff;
+}
+
+/* 布局预览 */
+.layout-preview {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 0.75rem;
+  min-height: 120px;
+}
+
+.dark .layout-preview {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.layout-preview-cell {
+  grid-column: span 12;
+  padding: 0.5rem 0.75rem;
+  background: rgba(26, 95, 42, 0.1);
+  border: 1px solid rgba(26, 95, 42, 0.15);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(26, 95, 42, 0.9);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dark .layout-preview-cell {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: rgba(34, 197, 94, 0.9);
+}
+
+.layout-preview-cell.size-full {
+  grid-column: span 12;
+}
+
+.layout-preview-cell.size-half {
+  grid-column: span 6;
+}
+
+.layout-preview-cell.size-third {
+  grid-column: span 4;
+}
+
+.layout-preview-cell.size-quarter {
+  grid-column: span 3;
+}
+
+@media (max-width: 480px) {
+  .layout-preview-cell.size-third,
+  .layout-preview-cell.size-quarter {
+    grid-column: span 6;
+  }
 }
 </style>

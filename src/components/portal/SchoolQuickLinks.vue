@@ -36,28 +36,28 @@ import { BookOpen, BarChart3, CalendarDays, Building2, ChevronRight } from 'luci
 
 const links = [
   {
-    name: '学生选课',
+    name: '选课规划',
     desc: '浏览可选课程，一键选课退课',
-    path: '/course-select',
+    path: '/panel/enrollment',
     color: 'blue',
     icon: BookOpen,
   },
   {
-    name: '成绩查询',
+    name: '成绩分析',
     desc: '查看各科成绩与 GPA 统计',
-    path: '/score',
+    path: '/panel/grades',
     color: 'emerald',
     icon: BarChart3,
   },
   {
-    name: '课表查询',
+    name: '课表编排',
     desc: '查看个人课程安排与教室',
-    path: '/schedule',
+    path: '/panel/timetable',
     color: 'amber',
     icon: CalendarDays,
   },
   {
-    name: '办事大厅',
+    name: '教务入口',
     desc: '常用教务服务一站式入口',
     path: '/',
     color: 'rose',

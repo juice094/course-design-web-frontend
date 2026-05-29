@@ -10,61 +10,61 @@ export const adminRoutes: RouteRecordRaw[] = [
         path: '',
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
-        meta: { title: '首页概览', icon: 'Home', menu: 'Home' }
+        meta: { title: '数据概览', icon: 'Home', menu: 'Home' }
       },
       {
-        path: 'student',
+        path: 'panel/users',
         name: 'Student',
         component: () => import('@/views/StudentView.vue'),
-        meta: { title: '学生管理', icon: 'User', menu: 'Student' }
+        meta: { title: '用户数据', icon: 'User', menu: 'Student' }
       },
       {
-        path: 'teacher',
+        path: 'panel/staff',
         name: 'Teacher',
         component: () => import('@/views/TeacherView.vue'),
-        meta: { title: '教师管理', icon: 'User', menu: 'Teacher' }
+        meta: { title: '人员档案', icon: 'User', menu: 'Teacher' }
       },
       {
-        path: 'course',
+        path: 'panel/courses',
         name: 'Course',
         component: () => import('@/views/CourseView.vue'),
-        meta: { title: '课程管理', icon: 'BookOpen', menu: 'Course' }
+        meta: { title: '课程资源', icon: 'BookOpen', menu: 'Course' }
       },
       {
-        path: 'score',
+        path: 'panel/grades',
         name: 'Score',
         component: () => import('@/views/ScoreView.vue'),
-        meta: { title: '成绩管理', icon: 'BarChart3', menu: 'Score' }
+        meta: { title: '成绩分析', icon: 'BarChart3', menu: 'Score' }
       },
       {
-        path: 'course-select',
+        path: 'panel/enrollment',
         name: 'CourseSelect',
         component: () => import('@/views/CourseSelectView.vue'),
-        meta: { title: '学生选课', icon: 'Plus', menu: 'CourseSelect' }
+        meta: { title: '选课规划', icon: 'Plus', menu: 'CourseSelect' }
       },
       {
-        path: 'schedule',
+        path: 'panel/timetable',
         name: 'Schedule',
         component: () => import('@/views/ScheduleView.vue'),
-        meta: { title: '排课管理', icon: 'CalendarDays', menu: 'Schedule' }
+        meta: { title: '课表编排', icon: 'CalendarDays', menu: 'Schedule' }
       },
       {
-        path: 'evaluation',
+        path: 'panel/reviews',
         name: 'Evaluation',
         component: () => import('@/views/EvaluationView.vue'),
-        meta: { title: '评教结果', icon: 'Star', menu: 'Evaluation' }
+        meta: { title: '教学评价', icon: 'Star', menu: 'Evaluation' }
       },
       {
-        path: 'operation-log',
+        path: 'panel/logs',
         name: 'OperationLog',
         component: () => import('@/views/OperationLogView.vue'),
-        meta: { title: '操作日志', icon: 'FileText', menu: 'OperationLog' }
+        meta: { title: '操作记录', icon: 'FileText', menu: 'OperationLog' }
       },
       {
-        path: 'about',
+        path: 'system',
         name: 'About',
         component: () => import('@/views/AboutView.vue'),
-        meta: { title: '关于系统', icon: 'Info', menu: 'About' }
+        meta: { title: '系统信息', icon: 'Info', menu: 'About' }
       }
     ]
   }

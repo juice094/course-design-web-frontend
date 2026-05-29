@@ -34,9 +34,9 @@ watch(() => route.path, (path) => {
 })
 
 const navItems = [
-  { path: '/', title: '首页概览' },
-  { path: '/student', title: '学生管理' },
-  { path: '/about', title: '关于系统' }
+  { path: '/', title: '数据概览' },
+  { path: '/panel/users', title: '用户数据' },
+  { path: '/system', title: '系统信息' }
 ]
 
 function go(path: string) {

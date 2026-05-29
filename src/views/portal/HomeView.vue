@@ -39,7 +39,7 @@
               :title="s.label"
               @click.stop="portalStore.updateSectionSize(section.id, s.value)"
             >
-              {{ s.icon }}
+              <component :is="s.icon" :size="14" />
             </button>
           </div>
         </div>
@@ -56,6 +56,7 @@
 import { ref, computed } from 'vue'
 import { usePortalStore } from '@/stores/portal'
 import type { SectionSize } from '@/stores/portal'
+import { Maximize2, Columns2, Columns3, Columns4 } from 'lucide-vue-next'
 import ProfileCard from '@/components/portal/ProfileCard.vue'
 import SchoolStats from '@/components/portal/SchoolStats.vue'
 import SchoolQuickLinks from '@/components/portal/SchoolQuickLinks.vue'
@@ -95,10 +96,10 @@ const componentMap: Record<string, any> = {
 }
 
 const sizeOptions = [
-  { value: 'full' as SectionSize, label: '全宽', icon: '▭' },
-  { value: 'half' as SectionSize, label: '半宽', icon: '▭▭' },
-  { value: 'third' as SectionSize, label: '三分之一', icon: '▭▭▭' },
-  { value: 'quarter' as SectionSize, label: '四分之一', icon: '▭▭▭▭' },
+  { value: 'full' as SectionSize, label: '全宽', icon: Maximize2 },
+  { value: 'half' as SectionSize, label: '半宽', icon: Columns2 },
+  { value: 'third' as SectionSize, label: '三分之一', icon: Columns3 },
+  { value: 'quarter' as SectionSize, label: '四分之一', icon: Columns4 },
 ]
 
 function onDragStart(id: string, e: DragEvent) {

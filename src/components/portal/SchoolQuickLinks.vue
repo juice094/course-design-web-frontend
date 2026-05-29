@@ -67,16 +67,17 @@ const links = [
 </script>
 
 <style scoped>
-.ql-section { width: 100%; }
+.ql-section { width: 100%; container-type: inline-size; }
 
 .ql-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .ql-grid {
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
   }
 }
@@ -138,6 +139,9 @@ const links = [
   color: #0f172a;
   margin: 0;
   transition: color 1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dark .ql-name { color: #fff; }

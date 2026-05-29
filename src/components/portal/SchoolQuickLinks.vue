@@ -71,15 +71,8 @@ const links = [
 
 .ql-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 0.75rem;
-}
-
-@media (min-width: 1024px) {
-  .ql-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-  }
 }
 
 .ql-card {
@@ -89,10 +82,10 @@ const links = [
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  padding: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   text-decoration: none;
   transition: all 0.5s;
 }
@@ -108,9 +101,9 @@ const links = [
 }
 
 .ql-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,7 +122,7 @@ const links = [
 .rose { background: rgba(244, 63, 94, 0.2); color: #e11d48; }
 .dark .rose { color: #fb7185; }
 
-.ql-svg { width: 1.25rem; height: 1.25rem; }
+.ql-svg { width: 1rem; height: 1rem; }
 
 .ql-info { flex: 1; min-width: 0; }
 
@@ -164,6 +157,11 @@ const links = [
   color: #94a3b8;
   transition: all 0.3s;
   flex-shrink: 0;
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .ql-arrow { display: block; }
 }
 
 .ql-card:hover .ql-arrow {

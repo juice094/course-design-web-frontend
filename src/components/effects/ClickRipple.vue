@@ -127,7 +127,8 @@ onMounted(() => {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 9999;
+  /* NOTE: 必须低于 Element Plus 弹窗（默认 2000+），避免遮挡确认/取消操作 */
+  z-index: 50;
   contain: layout paint;
 }
 </style>

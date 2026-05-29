@@ -40,8 +40,7 @@ function typeIcon(type: ToastType): string {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  /* NOTE: Toast 需要高于 Element Plus 弹窗（默认 2000+），确保通知始终可见 */
-  z-index: 10000;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

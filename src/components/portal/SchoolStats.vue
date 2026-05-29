@@ -30,8 +30,6 @@
           </p>
         </div>
       </div>
-      <!-- 底部渐变过渡，无缝衔接 stats -->
-      <div class="banner-fade" />
     </a>
 
     <!-- 统计数据 -->
@@ -65,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Users, BookOpen, Briefcase, FlaskConical } from 'lucide-vue-next'
 import { schoolInfo } from '@/data/profile'
 import schoolBg from '@/assets/portal-bg-school.png'
@@ -115,7 +113,7 @@ onMounted(() => {
 .school-section {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1rem;
 }
 
 /* 校园名片横幅 */
@@ -157,22 +155,6 @@ onMounted(() => {
     rgba(15, 23, 42, 0.45) 100%
   );
   backdrop-filter: blur(2px);
-}
-
-/* 底部渐变过渡，无缝衔接下方 stats */
-.banner-fade {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 48px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(15, 23, 42, 0.4) 100%
-  );
-  pointer-events: none;
-  z-index: 3;
 }
 
 .banner-content {
@@ -223,84 +205,79 @@ onMounted(() => {
   font-style: italic;
 }
 
-/* 统计数据 — auto-fit 自适应网格，半宽容器自动 2x2 */
+/* 统计数据 */
 .stats-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 0.625rem;
-  margin-top: -1rem;
-  position: relative;
-  z-index: 4;
-  padding: 0 0.625rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .stats-bar {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
 }
 
 .stat-item {
-  border-radius: 0.875rem;
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  padding: 0.875rem 0.5rem;
+  padding: 1rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.375rem;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-  text-align: center;
+  gap: 0.75rem;
+  transition: all 0.5s;
 }
 
 .dark .stat-item {
-  background: rgba(30, 41, 59, 0.55);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .stat-item:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-2px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
 }
 
 .stat-icon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.stat-item:hover .stat-icon {
-  transform: scale(1.15) rotate(-4deg);
-}
-
-.blue { background: rgba(59, 130, 246, 0.18); color: #2563eb; }
+.blue { background: rgba(59, 130, 246, 0.2); color: #2563eb; }
 .dark .blue { color: #60a5fa; }
 
-.emerald { background: rgba(16, 185, 129, 0.18); color: #059669; }
+.emerald { background: rgba(16, 185, 129, 0.2); color: #059669; }
 .dark .emerald { color: #34d399; }
 
-.amber { background: rgba(245, 158, 11, 0.18); color: #d97706; }
+.amber { background: rgba(245, 158, 11, 0.2); color: #d97706; }
 .dark .amber { color: #fbbf24; }
 
-.rose { background: rgba(244, 63, 94, 0.18); color: #e11d48; }
+.rose { background: rgba(244, 63, 94, 0.2); color: #e11d48; }
 .dark .rose { color: #fb7185; }
 
-.stat-svg { width: 1rem; height: 1rem; }
+.stat-svg { width: 1.25rem; height: 1.25rem; }
 
-.stat-body { display: flex; flex-direction: column; align-items: center; gap: 0.125rem; }
+.stat-body { flex: 1; min-width: 0; }
 
 .stat-value {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 900;
+  color: #0f172a;
   line-height: 1.2;
   transition: color 1s;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
 }
+
+.dark .stat-value { color: #fff; }
 
 /* 数字渐变色增强 */
 .stat-value.blue {
@@ -337,28 +314,13 @@ onMounted(() => {
 .dark .stat-value.rose { background: linear-gradient(135deg, #fb7185, #fda4af); -webkit-background-clip: text; background-clip: text; }
 
 .stat-label {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 700;
   color: #64748b;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.125rem;
 }
 
 .dark .stat-label { color: #94a3b8; }
-
-/* 半宽容器 2x2，全宽容器 4 列 */
-@container (min-width: 560px) {
-  .stats-bar {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    padding: 0 0.75rem;
-  }
-  .stat-item {
-    padding: 1rem 0.75rem;
-    gap: 0.5rem;
-  }
-  .stat-value { font-size: 1.375rem; }
-  .stat-icon { width: 2.25rem; height: 2.25rem; border-radius: 0.625rem; }
-  .stat-svg { width: 1.125rem; height: 1.125rem; }
-}
 </style>

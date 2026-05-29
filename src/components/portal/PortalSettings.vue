@@ -282,6 +282,63 @@
                 </div>
               </section>
 
+              <!-- 背景特效 -->
+              <section class="setting-group">
+                <h4 class="group-title">背景特效</h4>
+                <div class="group-content">
+                  <div class="field field-inline">
+                    <label class="field-label">启用特效</label>
+                    <input
+                      :checked="effectsStore.isEnabled"
+                      type="checkbox"
+                      @change="effectsStore.setEnabled(($event.target as HTMLInputElement).checked)"
+                    >
+                  </div>
+
+                  <div class="field">
+                    <label class="field-label">特效类型</label>
+                    <div class="btn-group">
+                      <button
+                        v-for="t in effectTypes"
+                        :key="t.value"
+                        class="btn-group-item"
+                        :class="{ active: effectsStore.activeType === t.value }"
+                        :disabled="!effectsStore.isEnabled"
+                        @click="effectsStore.setType(t.value)"
+                      >
+                        {{ t.label }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="field-label">粒子密度</label>
+                    <div class="btn-group">
+                      <button
+                        v-for="d in densityOptions"
+                        :key="d.value"
+                        class="btn-group-item"
+                        :class="{ active: effectsStore.density === d.value }"
+                        :disabled="!effectsStore.isEnabled"
+                        @click="effectsStore.setDensity(d.value)"
+                      >
+                        {{ d.label }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="field field-inline">
+                    <label class="field-label">省电模式</label>
+                    <input
+                      :checked="effectsStore.isPowerSave"
+                      type="checkbox"
+                      :disabled="!effectsStore.isEnabled"
+                      @change="effectsStore.setPowerSave(($event.target as HTMLInputElement).checked)"
+                    >
+                  </div>
+                </div>
+              </section>
+
               <!-- 重置 -->
               <section class="setting-group">
                 <button class="btn danger full" @click="portalStore.resetConfig">
@@ -416,7 +473,9 @@ import { ref, computed } from 'vue'
 import { X } from 'lucide-vue-next'
 import { usePortalStore, getCardColorClasses } from '@/stores/portal'
 import { useThemeStore } from '@/stores/theme'
+import { useEffectsStore } from '@/stores/effects'
 import type { CardColor, SectionSize } from '@/stores/portal'
+import type { EffectType, ParticleDensity } from '@/stores/effects'
 import SettingsScheduleEditor from './SettingsScheduleEditor.vue'
 import SettingsArticleEditor from './SettingsArticleEditor.vue'
 import SettingsPhotoEditor from './SettingsPhotoEditor.vue'
@@ -425,6 +484,7 @@ import SettingsAchievementEditor from './SettingsAchievementEditor.vue'
 
 const portalStore = usePortalStore()
 const themeStore = useThemeStore()
+const effectsStore = useEffectsStore()
 const bg = computed(() => portalStore.config.background)
 
 const activeTab = ref('appearance')
@@ -442,6 +502,22 @@ const tabs = [
   { id: 'photos', label: '照片', icon: '🖼️' },
   { id: 'moments', label: '动态', icon: '💬' },
   { id: 'achievements', label: '成就', icon: '🏆' },
+]
+
+const effectTypes = [
+  { value: 'auto' as EffectType, label: '自动' },
+  { value: 'fireflies' as EffectType, label: '萤火虫' },
+  { value: 'sakura' as EffectType, label: '樱花' },
+  { value: 'grass' as EffectType, label: '草地' },
+  { value: 'snow' as EffectType, label: '雪花' },
+  { value: 'danmaku' as EffectType, label: '弹幕' },
+  { value: 'none' as EffectType, label: '关闭' },
+]
+
+const densityOptions = [
+  { value: 'low' as ParticleDensity, label: '低' },
+  { value: 'medium' as ParticleDensity, label: '中' },
+  { value: 'high' as ParticleDensity, label: '高' },
 ]
 
 const sortedSections = computed(() =>

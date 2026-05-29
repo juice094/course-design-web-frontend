@@ -1,6 +1,11 @@
 <template>
   <div class="moments-section">
-    <div class="moments-timeline">
+    <div v-if="momentStore.moments.length === 0" class="empty-state">
+      <span class="empty-icon">💬</span>
+      <p class="empty-text">暂无动态说说</p>
+      <p class="empty-hint">记录你的生活点滴</p>
+    </div>
+    <div v-else class="moments-timeline">
       <div
         v-for="(moment, index) in momentStore.moments"
         :key="moment.id"
@@ -255,4 +260,49 @@ function previewImages(images: string[], index: number) {
 }
 
 .dark .tag { color: #94a3b8; }
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  transition: all 0.5s;
+}
+
+.dark .empty-state {
+  background: rgba(30, 41, 59, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.empty-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.25rem;
+  transition: color 1s;
+}
+
+.dark .empty-text { color: #e2e8f0; }
+
+.empty-hint {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0;
+  transition: color 1s;
+}
 </style>

@@ -3,9 +3,10 @@
     <div class="profile-header">
       <div class="avatar-wrap">
         <img
-          :src="socialLinks.github.avatar"
+          :src="avatarUrl"
           alt="avatar"
           class="avatar"
+          @error="onAvatarError"
         >
       </div>
       <div class="profile-info">
@@ -94,8 +95,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import SocialButton from './SocialButton.vue'
 import { socialLinks } from '@/data/profile'
+
+const DEFAULT_AVATAR = 'https://api.dicebear.com/7.x/avataaars/svg?seed=XingHui'
+const avatarUrl = ref(socialLinks.github.avatar || DEFAULT_AVATAR)
+
+function onAvatarError() {
+  avatarUrl.value = DEFAULT_AVATAR
+}
 
 function copyEmail() { navigator.clipboard.writeText(socialLinks.email) }
 function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
@@ -119,6 +128,8 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   /* 容器查询：响应式基于卡片自身宽度，而非视口宽度 */
   container-type: inline-size;
   container-name: profile;
+  /* SAFETY: width: 100% + padding 在 content-box 下会溢出父容器 */
+  box-sizing: border-box;
 }
 
 .dark .profile-card {
@@ -128,7 +139,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .profile-card:hover { transform: scale(1.01); }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .profile-card { padding: 2rem; min-height: 280px; }
 }
 
@@ -138,7 +149,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   gap: 1rem;
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .profile-header { gap: 1.5rem; }
 }
 
@@ -159,7 +170,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   .avatar-wrap { width: 5rem; height: 5rem; border-radius: 1rem; }
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .avatar-wrap { width: 6rem; height: 6rem; }
 }
 
@@ -212,7 +223,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   .name { font-size: 1.5rem; }
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .name { font-size: 1.875rem; }
 }
 
@@ -263,7 +274,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   .bio { font-size: 0.875rem; }
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .bio { font-size: 1rem; -webkit-line-clamp: unset; }
 }
 
@@ -275,12 +286,13 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   gap: 1.25rem;
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .profile-footer {
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap;
     margin-top: 2rem;
-    gap: 1.5rem;
+    gap: 1rem 1.5rem;
   }
 }
 
@@ -295,7 +307,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   .stats { gap: 1.5rem; justify-content: space-around; }
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .stats { width: auto; justify-content: flex-start; }
 }
 
@@ -309,7 +321,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .stat:hover .stat-num { transform: scale(1.1); }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .stat-num { font-size: 1.5rem; }
 }
 
@@ -333,7 +345,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
 
 .dark .stat-label { color: #94a3b8; }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .stat-label { font-size: 0.625rem; }
 }
 
@@ -344,7 +356,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   display: none;
 }
 
-@container profile (min-width: 768px) {
+@container profile (min-width: 560px) {
   .stat-divider { display: block; height: 2.5rem; }
 }
 
@@ -356,7 +368,7 @@ function copyQQ() { navigator.clipboard.writeText(socialLinks.qq) }
   width: 100%;
 }
 
-@container profile (min-width: 768px) {
-  .socials { width: auto; justify-content: flex-end; }
+@container profile (min-width: 560px) {
+  .socials { width: auto; justify-content: flex-end; flex-wrap: wrap; }
 }
 </style>

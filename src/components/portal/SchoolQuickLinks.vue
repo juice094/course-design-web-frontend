@@ -71,13 +71,12 @@ const links = [
 
 .ql-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 0.75rem;
 }
 
 @media (min-width: 768px) {
   .ql-grid {
-    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
   }
 }

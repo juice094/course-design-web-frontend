@@ -12,11 +12,16 @@
           :style="scaleStyle"
         >
           <div class="portal-content">
-            <router-view />
+            <PageTransition>
+              <router-view />
+            </PageTransition>
           </div>
         </div>
       </div>
     </main>
+
+    <ParticleCanvas />
+    <ClickRipple />
   </div>
 </template>
 
@@ -24,6 +29,9 @@
 import PortalBackground from '@/components/portal/PortalBackground.vue'
 import PortalNavbar from '@/components/portal/PortalNavbar.vue'
 import PortalSettings from '@/components/portal/PortalSettings.vue'
+import PageTransition from '@/components/effects/PageTransition.vue'
+import ClickRipple from '@/components/effects/ClickRipple.vue'
+import ParticleCanvas from '@/components/effects/ParticleCanvas.vue'
 import { useThemeStore } from '@/stores/theme'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 

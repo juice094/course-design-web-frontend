@@ -160,6 +160,50 @@
 
 ---
 
+## ✨ Glass → Portal 特效与交互迁移（v2.1.0）
+
+本阶段将 [Personal-Blog-Glass](https://github.com/juice094/Personal-Blog-Glass) 的视觉特效层与交互系统迁移至 Portal，以 Vue 3 原生能力重写，核心约束为**渲染性能**与**布局稳定性**。
+
+### 新增特效系统
+
+| 特效 | 技术方案 | 性能策略 |
+|:---|:---|:---|
+| **粒子背景** | 统一 Canvas 渲染层（1 Canvas 替代 295 DOM 节点） | `contain: layout paint` · `IntersectionObserver` · DPR 上限 2x · 后台降频 |
+| **点击波纹** | Canvas 2D + `requestAnimationFrame` | 涟漪上限 20 个 · `prefers-reduced-motion` 检测 |
+| **页面过渡** | Vue 3 `<Transition name="page">` | `transform` + `opacity` 仅 GPU 属性动画 |
+| **Toast 通知** | `<Teleport to="body">` + CSS transition | 最多 3 个堆叠 · 3s 自动消失 |
+
+### 粒子主题类型
+
+- 萤火虫（深色模式默认）
+- 樱花（浅色模式默认）
+- 风动草地
+- 全局飘雪
+- 弹幕背景
+
+### 布局稳定性优化
+
+| 优化项 | 修复前 | 修复后 |
+|:---|:---|:---|
+| HomeView 卡片高度不均 | `align-items: start` 导致高低错位 | `align-items: stretch` + flex wrapper 等高分发 |
+| ProfileCard 半宽不触发宽版 | `@container 768px` 半宽容器(~668px)永不触发 | 断点降至 `560px`，半宽/全宽均正常响应 |
+| ProfileCard 右边界溢出 | `content-box` + `width: 100%` + padding 撑出 42px | `box-sizing: border-box` 严格约束 |
+| 窄容器内卡片挤压 | viewport `@media` 在嵌套容器中失效 | `auto-fit` + `minmax()` 容器自适应网格 |
+| 空数据页面空白 | 无内容时组件完全消失 | 各模块添加空状态占位提示 |
+| Avatar 加载失败 | 外部图片 404 时显示裂图 | `@error` 回退到 `DEFAULT_AVATAR` |
+
+### 性能对比
+
+| 指标 | Glass (DOM 方案) | Portal (Canvas 方案) |
+|:---|:---|:---|
+| 粒子节点数 | 295 DOM 元素 | 1 `<canvas>` |
+| 内存占用 | ~300 DOM + 计算样式 | 1 Canvas + JS 数组 |
+| 渲染方式 | CSS `transform` × 295 | 单 draw call / 帧 |
+| 后台标签页 | 持续运行 | `visibilityState` 检测自动降频/暂停 |
+| 无障碍 | 无 | `prefers-reduced-motion` 完全禁用 |
+
+---
+
 ## 🚀 快速开始
 
 ### 环境要求
@@ -219,11 +263,16 @@ pnpm build
 course-design-web-frontend/
 ├── src/
 │   ├── components/
+│   │   ├── effects/                # 特效系统（Glass 迁移）
+│   │   │   ├── ParticleCanvas.vue      # 统一 Canvas 粒子背景
+│   │   │   ├── ClickRipple.vue         # 点击波纹特效
+│   │   │   ├── PageTransition.vue      # 页面过渡动画
+│   │   │   └── ToastContainer.vue      # Toast 通知容器
 │   │   ├── portal/                 # Portal 页面组件（17+ 个）
 │   │   │   ├── PortalBackground.vue    # 渐变流动背景
 │   │   │   ├── PortalNavbar.vue        # 顶部玻璃导航（含子页面菜单）
 │   │   │   ├── PortalSettings.vue      # 页面设置面板
-│   │   │   ├── ProfileCard.vue         # 个人名片
+│   │   │   ├── ProfileCard.vue         # 个人名片（容器查询响应式）
 │   │   │   ├── SchoolStats.vue         # 学校数据概览
 │   │   │   ├── SchoolQuickLinks.vue    # 快速功能入口
 │   │   │   ├── IdentityCards.vue       # 三重身份卡片
@@ -247,10 +296,10 @@ course-design-web-frontend/
 │   │   ├── AppLayout.vue           # 后台布局框架
 │   │   └── ...
 │   ├── layouts/
-│   │   └── PortalLayout.vue        # Portal 共享布局（背景 + 导航 + 设置面板）
+│   │   └── PortalLayout.vue        # Portal 共享布局（背景 + 导航 + 设置面板 + 特效挂载）
 │   ├── views/
 │   │   ├── portal/
-│   │   │   ├── HomeView.vue        # 首页（名片 + 学校 + 技能雷达）
+│   │   │   ├── HomeView.vue        # 首页（12 列网格 + 编辑模式）
 │   │   │   ├── AcademicView.vue    # 学业中心（课程表 + 文章 + 成就）
 │   │   │   ├── WorksView.vue       # 作品集（项目 + 照片墙 + Steam）
 │   │   │   ├── SpaceView.vue       # 个人空间（动态 + 自定义卡片）
@@ -262,7 +311,9 @@ course-design-web-frontend/
 │   │   ├── ScoreView.vue           # 成绩管理
 │   │   └── ...
 │   ├── stores/
-│   │   ├── portal.ts               # Portal 配置状态（背景/模块/卡片）
+│   │   ├── portal.ts               # Portal 配置状态（背景/模块/卡片/布局）
+│   │   ├── effects.ts              # 粒子特效配置（开关/类型/密度/省电模式）
+│   │   ├── toast.ts                # Toast 通知队列
 │   │   ├── theme.ts                # 暗色模式状态
 │   │   ├── schedule.ts             # 课程表数据 + 可见性控制
 │   │   ├── articles.ts             # 文章数据
@@ -307,14 +358,36 @@ border-radius: 1.5rem;  /* 24px 大圆角 */
 }
 ```
 
-### 响应式断点
+### 响应式策略
 
-| 断点 | 宽度 | 布局变化 |
+Portal 采用**容器查询（Container Queries）**替代传统视口媒体查询，确保组件在任意嵌套宽度下都能正确响应：
+
+```css
+/* ProfileCard 基于自身容器宽度响应 */
+@container profile (min-width: 560px) {
+  .profile-footer { flex-direction: row; }
+}
+```
+
+Grid 布局使用 `auto-fit` + `minmax()` 实现容器自适应列数：
+
+```css
+/* 自动适配列数，无需 breakpoint */
+grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+```
+
+### 性能优化清单
+
+| 技术 | 应用位置 | 目的 |
 |:---|:---|:---|
-| 默认 | < 640px | 单列，紧凑间距 |
-| `sm` | ≥ 640px | 2 列网格，标准间距 |
-| `md` | ≥ 768px | 导航展开，双栏布局 |
-| `lg` | ≥ 1024px | 3-4 列网格，完整布局 |
+| `contain: layout paint` | 特效层 Canvas / 浮动组件 | 隔离渲染，避免触发全局重排 |
+| `will-change: transform, opacity` | 动画元素（仅在动画时添加） | 提前提升为合成层，GPU 加速 |
+| `box-sizing: border-box` | 所有卡片组件 | 消除 padding 导致的宽度溢出 |
+| `content-visibility: auto` | 离屏模块 / 长列表卡片 | 延迟渲染不可见内容 |
+| `IntersectionObserver` | Canvas 粒子系统 | 视口外暂停动画 |
+| `document.visibilityState` | 所有 `requestAnimationFrame` | 后台标签页降频/暂停 |
+| `prefers-reduced-motion` | 所有动画 CSS / JS | 尊重用户无障碍偏好 |
+| `Math.min(devicePixelRatio, 2)` | Canvas 初始化 | 限制高 DPR 填充压力 |
 
 ---
 
@@ -340,6 +413,7 @@ git push origin feature/portal-landing
 | `fix:` | Bug 修复 | `fix(router): 修复未登录重定向逻辑` |
 | `style:` | 格式/样式 | `style(portal): 修复 ESLint 警告` |
 | `docs:` | 文档更新 | `docs: 更新 README 三板块说明` |
+| `perf:` | 性能优化 | `perf(effects): Canvas 替代 DOM 粒子渲染` |
 
 ---
 
@@ -351,6 +425,7 @@ git push origin feature/portal-landing
 | `ui-vendor` chunk 体积大 (~650KB gzip) | 🟡 可优化 | 考虑按需引入 Element Plus |
 | Steam 数据为静态配置 | 🟡 可扩展 | 需后端代理 Steam Web API |
 | GitHub API rate limit (60/h) | 🟡 可扩展 | 生产环境建议后端缓存 |
+| Glass → Portal 迁移 v2.1.0 | ✅ 已完成 | 粒子特效/Toast/波纹/过渡动画 |
 
 ---
 

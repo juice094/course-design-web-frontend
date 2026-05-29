@@ -1,5 +1,5 @@
 <template>
-  <div v-if="cards.length > 0" class="section">
+  <div class="section">
     <div class="section-header">
       <div class="section-icon" :style="{ background: 'rgba(99,102,241,0.2)' }">
         <Plus class="icon-svg" :size="16" />
@@ -7,25 +7,33 @@
       <h2 class="section-title">自定义链接</h2>
     </div>
 
-    <div class="custom-grid">
-      <a
-        v-for="card in cards"
-        :key="card.id"
-        :href="card.url"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="custom-card"
-        :style="{ '--card-bg': getCardColorClasses(card.color).bg, '--card-text': getCardColorClasses(card.color).text }"
-      >
-        <div class="custom-icon" :style="{ background: getCardColorClasses(card.color).bg, color: getCardColorClasses(card.color).text }">
-          <Link class="custom-svg" :size="20" />
-        </div>
-        <div class="custom-info">
-          <h4 class="custom-name">{{ card.title }}</h4>
-          <p class="custom-desc">{{ card.description }}</p>
-        </div>
-        <ChevronRight class="custom-arrow" :size="16" />
-      </a>
+    <template v-if="cards.length > 0">
+      <div class="custom-grid">
+        <a
+          v-for="card in cards"
+          :key="card.id"
+          :href="card.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="custom-card"
+          :style="{ '--card-bg': getCardColorClasses(card.color).bg, '--card-text': getCardColorClasses(card.color).text }"
+        >
+          <div class="custom-icon" :style="{ background: getCardColorClasses(card.color).bg, color: getCardColorClasses(card.color).text }">
+            <Link class="custom-svg" :size="20" />
+          </div>
+          <div class="custom-info">
+            <h4 class="custom-name">{{ card.title }}</h4>
+            <p class="custom-desc">{{ card.description }}</p>
+          </div>
+          <ChevronRight class="custom-arrow" :size="16" />
+        </a>
+      </div>
+    </template>
+
+    <div v-else class="empty-state">
+      <span class="empty-icon">🔗</span>
+      <p class="empty-text">暂无自定义链接</p>
+      <p class="empty-hint">在页面设置中添加常用链接</p>
     </div>
   </div>
 </template>
@@ -171,5 +179,50 @@ import { computed } from 'vue'
 .custom-card:hover .custom-arrow {
   color: #6366f1;
   transform: translateX(2px);
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  transition: all 0.5s;
+}
+
+.dark .empty-state {
+  background: rgba(30, 41, 59, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.empty-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.25rem;
+  transition: color 1s;
+}
+
+.dark .empty-text { color: #e2e8f0; }
+
+.empty-hint {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0;
+  transition: color 1s;
 }
 </style>

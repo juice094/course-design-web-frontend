@@ -3,7 +3,12 @@
     <!-- 扩展版个人简介 -->
     <div class="about-card">
       <div class="about-header">
-        <img :src="profile.socialLinks.github.avatar" alt="avatar" class="about-avatar">
+        <img
+          :src="avatarUrl"
+          alt="avatar"
+          class="about-avatar"
+          @error="onAvatarError"
+        >
         <div class="about-meta">
           <h2 class="about-name">星辉</h2>
           <p class="about-tag">甘肃农业大学 · 计算机科学与技术 · 2022 级</p>
@@ -57,11 +62,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { socialLinks } from '@/data/profile'
 import SchoolQuickLinks from '@/components/portal/SchoolQuickLinks.vue'
 import SiteDashboard from '@/components/portal/SiteDashboard.vue'
 
 const profile = { socialLinks }
+
+const DEFAULT_AVATAR = 'https://api.dicebear.com/7.x/avataaars/svg?seed=XingHui'
+const avatarUrl = ref(profile.socialLinks.github.avatar || DEFAULT_AVATAR)
+
+function onAvatarError() {
+  avatarUrl.value = DEFAULT_AVATAR
+}
 </script>
 
 <style scoped>

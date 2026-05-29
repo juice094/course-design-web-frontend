@@ -195,13 +195,27 @@ function onDrop(e: DragEvent) {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 1.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .card-wrapper {
   grid-column: span 12;
   transition: all 0.3s ease;
   position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-wrapper > * {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.card-wrapper > .drag-handle {
+  flex: 0 0 auto;
+  min-height: unset;
+  width: auto;
 }
 
 /* 尺寸类 */

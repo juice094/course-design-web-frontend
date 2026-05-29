@@ -208,13 +208,12 @@ function onDrop(e: DragEvent) {
 
 .card-wrapper > * {
   flex: 1 1 auto;
-  min-height: 0;
+  /* NOTE: 不设置 min-height，由子组件自身控制，避免覆盖 ProfileCard 等 min-height */
   width: 100%;
 }
 
 .card-wrapper > .drag-handle {
   flex: 0 0 auto;
-  min-height: unset;
   width: auto;
 }
 
